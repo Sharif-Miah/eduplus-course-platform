@@ -3,7 +3,7 @@ export const authConfig = {
         strategy: 'jwt',
     },
     providers: [],
-    secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "84706212e8109edc5fea817ce23745adff4ab6e051c8a5dedd0721678ed5bca6",
+    secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET,
     trustHost: true,
     callbacks: {
         async jwt({ token, user }) {
