@@ -74,6 +74,7 @@ export async function getCourseDetails(id) {
 }
 
 export async function getCourseDetailsByInstructor(instructorId, expand) {
+    if (!instructorId) return null;
     await dbConnect();
     const publishedCourses = await Course.find({instructor: instructorId, active:true}).lean();
 
@@ -84,35 +85,39 @@ export async function getCourseDetailsByInstructor(instructorId, expand) {
         })
     );
 
-    const groupedByCourses = Object.groupBy(enrollments.flat(), ({ course }) => course);
+    const allEnrollmentsFlat = enrollments.flat();
+    const groupedByCourses = allEnrollmentsFlat.reduce((acc, item) => {
+        const key = item.course ? item.course.toString() : "";
+        if (!acc[key]) acc[key] = [];
+        acc[key].push(item);
+        return acc;
+    }, {});
 
     const totalRevenue = publishedCourses.reduce((acc, course) => {
-        const quantity = groupedByCourses[course._id] ? groupedByCourses[course._id].length : 0;
-        return (acc + quantity * course.price)
+        const courseIdStr = course._id.toString();
+        const quantity = (groupedByCourses[courseIdStr] || groupedByCourses[course._id])?.length || 0;
+        return (acc + quantity * (course.price || 0));
     }, 0);
 
-    const totalEnrollments = enrollments.reduce(function (acc, obj) {
-        return acc + obj.length;
-    }, 0)
+    const totalEnrollments = allEnrollmentsFlat.length;
 
     const testimonials = await Promise.all(
         publishedCourses.map(async (course) => {
           const testimonial = await getTestimonialsForCourse(course._id.toString());
           return testimonial;
         })
-      );
+    );
 
-      const totalTestimonials = testimonials.flat();
-      const avgRating = (totalTestimonials.reduce(function (acc, obj) {
-            return acc + obj.rating;
-        }, 0)) / totalTestimonials.length;
+    const totalTestimonials = testimonials.flat();
+    const avgRating = totalTestimonials.length > 0
+        ? ((totalTestimonials.reduce((acc, obj) => acc + (obj.rating || 0), 0)) / totalTestimonials.length).toFixed(1)
+        : "5.0";
 
-    //console.log("testimonials", totalTestimonials, avgRating);
     if (expand) {
         const allCourses = await Course.find({instructor: instructorId}).lean();
         return {
-            "courses": allCourses?.flat(),
-            "enrollments": enrollments?.flat(),
+            "courses": allCourses?.flat() || [],
+            "enrollments": allEnrollmentsFlat,
             "reviews": totalTestimonials,
         }
     }
@@ -120,7 +125,7 @@ export async function getCourseDetailsByInstructor(instructorId, expand) {
         "courses": publishedCourses.length,
         "enrollments": totalEnrollments,
         "reviews": totalTestimonials.length,
-        "ratings": avgRating.toPrecision(2),
+        "ratings": avgRating,
         "revenue": totalRevenue
     }
 }
