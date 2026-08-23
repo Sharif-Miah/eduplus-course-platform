@@ -50,6 +50,7 @@ export const ImageForm = ({ initialData, courseId }) => {
 
       uploadFile();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [file]);
 
   const toggleEdit = () => setIsEditing((current) => !current);

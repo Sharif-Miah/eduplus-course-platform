@@ -43,15 +43,10 @@ export const UploadDropzone = (props) => {
 
     setDroppedFiles(acceptedFiles);
 
-    // await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve('resolved');
-    //   }, 3000);
-    // });
     setUploadProgress(100);
     clearInterval(progressInterval);
     onUpload(acceptedFiles);
-  }, []);
+  }, [onUpload]);
 
   const { getRootProps, getInputProps, fileRejections } = useDropzone({
     onDrop,

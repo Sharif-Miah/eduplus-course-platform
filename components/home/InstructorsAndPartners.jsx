@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { BookOpen, GraduationCap, Facebook, Youtube, ChevronLeft, ChevronRight } from "lucide-react";
@@ -192,9 +192,9 @@ export default function InstructorsAndPartners() {
   // Instructors max index (showing 4 at a time)
   const maxInstructorIndex = instructors.length - 4;
 
-  const handleNextInstructor = () => {
+  const handleNextInstructor = useCallback(() => {
     setInstructorIndex((prev) => (prev >= maxInstructorIndex ? 0 : prev + 1));
-  };
+  }, [maxInstructorIndex]);
 
   const handlePrevInstructor = () => {
     setInstructorIndex((prev) => (prev <= 0 ? maxInstructorIndex : prev - 1));
@@ -203,9 +203,9 @@ export default function InstructorsAndPartners() {
   // Brands max index (showing 5 at a time)
   const maxBrandIndex = brands.length - 5;
 
-  const handleNextBrand = () => {
+  const handleNextBrand = useCallback(() => {
     setBrandIndex((prev) => (prev >= maxBrandIndex ? 0 : prev + 1));
-  };
+  }, [maxBrandIndex]);
 
   const handlePrevBrand = () => {
     setBrandIndex((prev) => (prev <= 0 ? maxBrandIndex : prev - 1));
@@ -218,7 +218,7 @@ export default function InstructorsAndPartners() {
       handleNextInstructor();
     }, 3500);
     return () => clearInterval(timer);
-  }, [isInstructorPaused, maxInstructorIndex]);
+  }, [isInstructorPaused, maxInstructorIndex, handleNextInstructor]);
 
   // Brands auto-slide timer
   useEffect(() => {
@@ -227,7 +227,7 @@ export default function InstructorsAndPartners() {
       handleNextBrand();
     }, 3000);
     return () => clearInterval(timer);
-  }, [isBrandPaused, maxBrandIndex]);
+  }, [isBrandPaused, maxBrandIndex, handleNextBrand]);
 
   return (
     <section id="instructors" className="py-24 bg-white dark:bg-[#0b1120] relative overflow-hidden transition-colors duration-200">

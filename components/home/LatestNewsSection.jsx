@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, User, Calendar, FileText, ChevronLeft, ChevronRight } from "lucide-react";
@@ -63,9 +63,9 @@ export default function LatestNewsSection() {
   // Number of cards to slide
   const maxIndex = blogs.length - 3;
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  };
+  }, [maxIndex]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
@@ -77,7 +77,7 @@ export default function LatestNewsSection() {
       handleNext();
     }, 3500);
     return () => clearInterval(timer);
-  }, [isPaused, maxIndex]);
+  }, [isPaused, maxIndex, handleNext]);
 
   return (
     <section id="blog" className="py-24 bg-slate-50/40 dark:bg-[#0b1120] relative overflow-hidden transition-colors duration-200">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Play, ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -63,9 +63,9 @@ export default function HowItWorksAndTestimonials() {
   // Maximum index so we always have cards to fill 2 visible slots on desktop
   const maxIndex = testimonials.length - 2;
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  };
+  }, [maxIndex]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
@@ -79,7 +79,7 @@ export default function HowItWorksAndTestimonials() {
     }, 3500);
 
     return () => clearInterval(timer);
-  }, [isPaused, maxIndex]);
+  }, [isPaused, maxIndex, handleNext]);
 
   return (
     <section className="py-24 bg-white dark:bg-[#0b1120] relative overflow-hidden transition-colors duration-200">
