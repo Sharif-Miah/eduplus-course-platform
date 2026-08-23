@@ -7,7 +7,10 @@ import { getCourseDetails } from "@/queries/courses";
 import Link from "next/link";
 import { ArrowLeft, ChevronRight, BookOpen, GraduationCap } from "lucide-react";
 
-const CourseLayout = async ({ children, params: { id } }) => {
+export const dynamic = "force-dynamic";
+
+const CourseLayout = async ({ children, params }) => {
+  const id = params?.id;
   const loggedinUser = await getLoggedInUser();
   if (!loggedinUser) {
     redirect("/login");

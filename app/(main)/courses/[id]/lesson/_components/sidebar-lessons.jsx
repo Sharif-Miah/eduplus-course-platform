@@ -3,8 +3,8 @@ import { SidebarLessonItem } from "./sidebar-lesson-items";
 import { replaceMongoIdInArray } from "@/lib/convertData";
 
 export const SidebarLessons = ({ courseId, lessons, module }) => {
-    const allLessons = replaceMongoIdInArray(lessons).toSorted(
-        (a, b) => a.order - b.order
+    const allLessons = [...replaceMongoIdInArray(lessons || [])].sort(
+        (a, b) => (a.order || 0) - (b.order || 0)
       );
     return (
         <AccordionContent>

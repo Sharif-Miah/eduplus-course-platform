@@ -19,7 +19,13 @@ import {
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const Course = async ({ params: { id }, searchParams: { name, module } }) => {
+export const dynamic = "force-dynamic";
+
+const Course = async ({ params, searchParams }) => {
+  const id = params?.id;
+  const name = searchParams?.name;
+  const selectedModule = searchParams?.module;
+
   const course = await getCourseDetails(id);
 
   if (!course) {
@@ -27,7 +33,7 @@ const Course = async ({ params: { id }, searchParams: { name, module } }) => {
   }
 
   const modulesArray = course?.modules || [];
-  const allModules = replaceMongoIdInArray(modulesArray).toSorted((a, b) => (a.order || 0) - (b.order || 0));
+  const allModules = [...replaceMongoIdInArray(modulesArray)].sort((a, b) => (a.order || 0) - (b.order || 0));
 
   // Flatten all lessons with their module slug for seamless Next/Prev navigation
   const allLessonsFlat = allModules.flatMap((m) =>
@@ -41,7 +47,7 @@ const Course = async ({ params: { id }, searchParams: { name, module } }) => {
   const defaultLesson = allLessonsFlat[0] ? replaceMongoIdInObject(allLessonsFlat[0]) : null;
   const currentLessonData = name ? await getLessonBySlug(name) : defaultLesson;
   const lessonToPlay = currentLessonData ? replaceMongoIdInObject(currentLessonData) : null;
-  const currentModuleSlug = module ?? (allModules[0]?.slug || "");
+  const currentModuleSlug = selectedModule ?? (allModules[0]?.slug || "");
 
   if (!lessonToPlay) {
     return (
