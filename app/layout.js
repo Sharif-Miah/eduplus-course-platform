@@ -2,6 +2,7 @@ import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
+import { dbConnect } from "@/service/mongo";
 import AuthProvider from "@/components/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -19,6 +20,7 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
+  await dbConnect();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.className, poppins.className, "bg-[#ffffff] dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 transition-colors duration-200")}>

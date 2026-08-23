@@ -1,5 +1,7 @@
 import { getCategories } from "@/queries/categories";
 import { getCourseList } from "@/queries/courses";
+
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import CtaBanners from "@/components/home/CtaBanners";
 import { 

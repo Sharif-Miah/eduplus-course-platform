@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 //import { CourseProgress } from "@/components/course-progress";
 import { SectionTitle } from "@/components/section-title";
 import { Button } from "@/components/ui/button";
