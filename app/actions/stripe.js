@@ -14,8 +14,12 @@ export async function createCheckoutSession(data) {
   }
 
   const ui_mode = "hosted";
-  const origin = headers().get("origin");
+  const headerList = headers();
+  const host = headerList.get("x-forwarded-host") || headerList.get("host") || "educonnect-peach-phi.vercel.app";
+  const protocol = headerList.get("x-forwarded-proto") || "https";
+  const origin = headerList.get("origin") || `${protocol}://${host}`;
   const courseId = data.get("courseId");
+
 
   const course = await getCourseDetails(courseId);
 

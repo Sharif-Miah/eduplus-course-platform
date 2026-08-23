@@ -29,8 +29,7 @@ export function LoginForm() {
         console.error(response.error);
         setError(response.error);
       } else {
-        router.push(callbackUrl);
-        router.refresh();
+        window.location.href = callbackUrl;
       }
     } catch (e) {
       setError(e.message || "Login failed. Please check your credentials.");

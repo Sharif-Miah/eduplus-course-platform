@@ -53,6 +53,8 @@ export const {
     handlers: { GET, POST },
 } = NextAuth({
     ...authConfig,
+    trustHost: true,
+    secret: process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "84706212e8109edc5fea817ce23745adff4ab6e051c8a5dedd0721678ed5bca6",
     providers: [
         CredentialsProvider({
             async authorize(credentials) {
@@ -100,8 +102,8 @@ export const {
             },
         }),
         GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
             authorization: {
                 params: {
                     prompt: "consent",
@@ -112,6 +114,33 @@ export const {
         }),
     ],
     callbacks: {
+        async signIn({ user, account }) {
+            if (account?.provider === "google" && user?.email) {
+                try {
+                    await dbConnect();
+                    let existingUser = await User.findOne({ email: user.email });
+                    if (!existingUser) {
+                        const names = (user.name || "").trim().split(" ");
+                        const firstName = names[0] || "Student";
+                        const lastName = names.slice(1).join(" ") || "";
+                        existingUser = await User.create({
+                            firstName,
+                            lastName,
+                            email: user.email,
+                            role: "student",
+                            profilePicture: user.image,
+                        });
+                    }
+                    user.role = existingUser.role || "student";
+                    user.id = existingUser._id.toString();
+                    return true;
+                } catch (err) {
+                    console.error("Google sign-in error:", err);
+                    return true;
+                }
+            }
+            return true;
+        },
         async jwt({ token, user }) {
             if (user) {
                 token.role = user.role;
@@ -120,7 +149,7 @@ export const {
             return token;
         },
         async session({ session, token }) {
-            if (token && session.user) {
+            if (token && session?.user) {
                 session.user.role = token.role;
                 session.user.id = token.id;
             }
@@ -128,3 +157,4 @@ export const {
         },
     },
 });
+

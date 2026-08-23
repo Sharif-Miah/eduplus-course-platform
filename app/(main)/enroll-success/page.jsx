@@ -12,6 +12,8 @@ import { sendEmails } from "@/lib/emails";
 
 import { enrollForCourse } from "@/queries/enrollments";
 
+export const dynamic = "force-dynamic";
+
 const Success = async ({ searchParams: { session_id, courseId } }) => {
     console.log(session_id, courseId);
 
