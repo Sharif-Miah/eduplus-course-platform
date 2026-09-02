@@ -116,9 +116,9 @@ export async function getCourseDetailsByInstructor(instructorId, expand) {
     if (expand) {
         const allCourses = await Course.find({instructor: instructorId}).lean();
         return {
-            "courses": allCourses?.flat() || [],
-            "enrollments": allEnrollmentsFlat,
-            "reviews": totalTestimonials,
+            "courses": replaceMongoIdInArray(allCourses?.flat() || []),
+            "enrollments": replaceMongoIdInArray(allEnrollmentsFlat || []),
+            "reviews": replaceMongoIdInArray(totalTestimonials || []),
         }
     }
     return {
