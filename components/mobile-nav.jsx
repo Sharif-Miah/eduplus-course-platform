@@ -108,11 +108,17 @@ export function MobileNav({ items, onClose, children }) {
                 </Link>
               )}
               <button
-                onClick={() => {
-                  signOut({ callbackUrl: "/" });
-                  onClose && onClose();
+                onClick={async () => {
+                  if (onClose) onClose();
+                  try {
+                    await signOut({ callbackUrl: "/", redirect: false });
+                  } catch (err) {
+                    console.error("SignOut error:", err);
+                  } finally {
+                    window.location.href = "/";
+                  }
                 }}
-                className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 w-full text-left"
+                className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 w-full text-left cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
                 <span>Sign Out</span>

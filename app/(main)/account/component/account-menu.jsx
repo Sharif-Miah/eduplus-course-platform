@@ -44,7 +44,15 @@ export default function Menu() {
       {/* Sign Out Button */}
       <li className="pt-2">
         <button
-          onClick={() => signOut({ callbackUrl: "/" })}
+          onClick={async () => {
+            try {
+              await signOut({ callbackUrl: "/", redirect: false });
+            } catch (err) {
+              console.error("SignOut error:", err);
+            } finally {
+              window.location.href = "/";
+            }
+          }}
           className="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs sm:text-sm font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-all duration-200 group cursor-pointer"
         >
           <div className="flex items-center gap-3">

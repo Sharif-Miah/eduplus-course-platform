@@ -97,7 +97,26 @@ export const Navbar = () => {
             </DropdownMenuItem>
             <DropdownMenuItem 
               className="cursor-pointer rounded-xl text-xs font-semibold py-2 px-3 text-rose-600 dark:text-rose-400 focus:bg-rose-50 dark:focus:bg-rose-950/40 focus:text-rose-700"
-              onClick={() => signOut({ callbackUrl: "/" })}
+              onSelect={async (e) => {
+                if (e && typeof e.preventDefault === "function") e.preventDefault();
+                try {
+                  await signOut({ callbackUrl: "/", redirect: false });
+                } catch (err) {
+                  console.error("SignOut error:", err);
+                } finally {
+                  window.location.href = "/";
+                }
+              }}
+              onClick={async (e) => {
+                if (e && typeof e.preventDefault === "function") e.preventDefault();
+                try {
+                  await signOut({ callbackUrl: "/", redirect: false });
+                } catch (err) {
+                  console.error("SignOut error:", err);
+                } finally {
+                  window.location.href = "/";
+                }
+              }}
             >
               <div className="flex items-center gap-2 w-full">
                 <LogOut className="w-3.5 h-3.5" />
