@@ -75,65 +75,68 @@ export default function AboutExperienceSection() {
         {/* Main 2-Column Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
-          {/* Left Column: Creative Image Collage (Image 1 Style) */}
-          <div className="lg:col-span-6 relative flex items-center justify-center min-h-[360px] sm:min-h-[520px]">
+          {/* Left Column: Creative Image Collage (Matching Reference Design Exactly) */}
+          <div className="lg:col-span-6 relative flex items-center justify-center min-h-[380px] sm:min-h-[500px] lg:min-h-[540px]">
             
             {/* Top-left decorative wavy lines */}
-            <div className="absolute top-2 left-6 text-indigo-400 opacity-80 animate-float-slow hidden sm:block">
-              <svg width="40" height="60" viewBox="0 0 40 60" fill="none">
+            <div className="absolute top-0 sm:top-2 left-4 sm:left-8 text-indigo-400 opacity-80 animate-float-slow">
+              <svg width="32" height="50" viewBox="0 0 40 60" fill="none" className="sm:w-[40px] sm:h-[60px]">
                 <path d="M5 5C15 15 5 25 15 35C25 45 15 55 25 65" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 <path d="M18 5C28 15 18 25 28 35C38 45 28 55 38 65" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
               </svg>
             </div>
 
             {/* Top "love" colorful doodle with sparkles */}
-            <div className="absolute -top-4 right-1/4 text-rose-500 font-serif italic text-lg sm:text-2xl font-bold tracking-wider opacity-90 rotate-6 flex items-center gap-1 animate-pulse hidden sm:flex">
+            <div className="absolute -top-2 sm:-top-4 left-[40%] sm:left-[35%] text-rose-500 font-serif italic text-base sm:text-2xl font-bold tracking-wider opacity-90 rotate-6 flex items-center gap-1 animate-pulse">
               <span>love</span>
-              <Heart className="w-4 h-4 fill-rose-500" />
+              <Heart className="w-3 h-3 sm:w-4 sm:h-4 fill-rose-500" />
             </div>
 
             {/* Bottom-left dot grid */}
-            <div className="absolute bottom-6 left-8 opacity-40 hidden sm:block">
-              <div className="grid grid-cols-5 gap-1.5">
+            <div className="absolute bottom-8 sm:bottom-6 left-6 sm:left-10 opacity-40">
+              <div className="grid grid-cols-5 gap-1 sm:gap-1.5">
                 {[...Array(25)].map((_, i) => (
                   <div key={i} className="w-1 h-1 bg-[#4A3AFF] rounded-full" />
                 ))}
               </div>
             </div>
 
-            {/* Watermark outline graduation cap */}
-            <div className="absolute -bottom-6 right-2 text-slate-100 dark:text-slate-800 -z-0 pointer-events-none hidden sm:block">
-              <GraduationCap className="w-44 h-44 stroke-[1]" />
+            {/* Watermark outline graduation cap - bottom right */}
+            <div className="absolute -bottom-4 sm:-bottom-6 right-0 sm:right-2 text-slate-200/60 dark:text-slate-800 -z-0 pointer-events-none">
+              <GraduationCap className="w-28 h-28 sm:w-44 sm:h-44 stroke-[1]" />
             </div>
 
-            {/* Pill Shaped Photo 1 (Studying at table) */}
-            <div className="relative w-40 sm:w-64 h-64 sm:h-96 rounded-[70px] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10 -translate-x-4 sm:-translate-x-12">
-              <Image
-                src="/assets/home/about_student_study.jpg"
-                alt="Students studying"
-                fill
-                unoptimized
-                className="object-cover"
-              />
-            </div>
-
-            {/* Circular Photo 2 (Student with glasses & books on teal background) */}
-            <div className="relative w-40 sm:w-64 h-40 sm:h-64 rounded-full overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-20 -translate-x-2 sm:-translate-x-10 translate-y-8 bg-[#14C88C]">
-              <Image
-                src="/assets/home/about_student_portrait.jpg"
-                alt="University Student"
-                fill
-                unoptimized
-                className="object-cover"
-              />
-            </div>
-
-            {/* Floating Experience Advisor Card (Image 1 Style) */}
-            <div className="absolute bottom-14 left-2 sm:left-10 z-30 bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col items-center gap-2 text-center animate-float">
-              <div className="w-12 h-12 rounded-full bg-[#4A3AFF] text-white flex items-center justify-center shadow-md">
-                <GraduationCap className="w-6 h-6" />
+            {/* Images Container - positioned to match reference */}
+            <div className="relative w-full flex items-center justify-center">
+              {/* Pill Shaped Photo 1 (Studying at table) - LEFT */}
+              <div className="relative w-[160px] sm:w-[220px] lg:w-[240px] h-[240px] sm:h-[340px] lg:h-[380px] rounded-[60px] sm:rounded-[70px] overflow-hidden shadow-2xl border-[3px] sm:border-4 border-white dark:border-slate-700 z-10 -mr-8 sm:-mr-12">
+                <Image
+                  src="/assets/home/about_student_study.jpg"
+                  alt="Students studying"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
               </div>
-              <span className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
+
+              {/* Circular Photo 2 (Student with glasses & books on teal background) - RIGHT, overlapping */}
+              <div className="relative w-[160px] sm:w-[220px] lg:w-[250px] h-[160px] sm:h-[220px] lg:h-[250px] rounded-full overflow-hidden shadow-2xl border-[3px] sm:border-4 border-white dark:border-slate-700 z-20 mt-12 sm:mt-16 bg-[#14C88C]">
+                <Image
+                  src="/assets/home/about_student_portrait.jpg"
+                  alt="University Student"
+                  fill
+                  unoptimized
+                  className="object-cover"
+                />
+              </div>
+            </div>
+
+            {/* Floating Experience Advisor Card */}
+            <div className="absolute bottom-10 sm:bottom-14 left-4 sm:left-8 lg:left-10 z-30 bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col items-center gap-1.5 sm:gap-2 text-center animate-float">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#4A3AFF] text-white flex items-center justify-center shadow-md">
+                <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6" />
+              </div>
+              <span className="text-[10px] sm:text-sm font-bold text-slate-900 dark:text-white leading-tight">
                 Experience<br />Advisor
               </span>
             </div>
