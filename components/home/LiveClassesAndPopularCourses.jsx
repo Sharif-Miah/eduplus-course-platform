@@ -161,7 +161,7 @@ export default function LiveClassesAndPopularCourses({ courses = [] }) {
               LIVE CLASSES
             </p>
             <div className="relative inline-block">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                 It&apos;s Easy to Start Learning
               </h2>
               {/* Hand-drawn blue wavy underline */}
@@ -303,7 +303,7 @@ export default function LiveClassesAndPopularCourses({ courses = [] }) {
                 COURSES
               </p>
               <div className="relative inline-block">
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                   Most Popular Courses
                 </h2>
                 {/* Hand-drawn blue wavy underline */}

@@ -122,8 +122,8 @@ export function MainNav({ items, children }) {
       {/* Right Side Actions */}
       <div className="flex items-center gap-2.5 sm:gap-3.5">
         
-        {/* Search Bar / Trigger */}
-        <div className="relative">
+        {/* Search Bar / Trigger - hidden on mobile */}
+        <div className="relative hidden sm:block">
           {searchOpen ? (
             <div className="flex items-center bg-gray-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 rounded-full px-3 py-1.5 animate-in fade-in">
               <input
@@ -157,17 +157,19 @@ export function MainNav({ items, children }) {
           )}
         </div>
 
-        {/* Cart / My Courses Icon */}
+        {/* Cart / My Courses Icon - hidden on mobile */}
         <Link
           href={isAuthenticated ? "/account/enrolled-courses" : "/courses"}
-          className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-50 dark:bg-slate-800/90 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-200/80 dark:border-slate-700 flex items-center justify-center text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition shadow-xs"
+          className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-gray-50 dark:bg-slate-800/90 hover:bg-gray-100 dark:hover:bg-slate-700 border border-gray-200/80 dark:border-slate-700 hidden sm:flex items-center justify-center text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white transition shadow-xs"
           title="Enrolled Courses"
         >
           <ShoppingBag className="w-4 h-4" />
         </Link>
 
-        {/* Sun / Moon Theme Toggle */}
-        <ThemeToggle />
+        {/* Sun / Moon Theme Toggle - hidden on mobile */}
+        <div className="hidden sm:block">
+          <ThemeToggle />
+        </div>
 
         {/* AUTH BUTTONS SECTION: When Logged Out vs When Logged In */}
         {!isAuthenticated ? (

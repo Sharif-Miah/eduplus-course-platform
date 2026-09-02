@@ -262,7 +262,7 @@ export default function InstructorsAndPartners() {
             INSTRUCTORS
           </p>
           <div className="relative inline-block">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
               Our Expert Instructors
             </h2>
             {/* Hand-drawn blue wavy underline */}
@@ -283,7 +283,7 @@ export default function InstructorsAndPartners() {
           onMouseLeave={() => setIsInstructorPaused(false)}
         >
           <div
-            className="flex transition-transform duration-700 ease-in-out gap-6 sm:gap-8"
+            className="flex transition-transform duration-700 ease-in-out gap-3 sm:gap-8"
             style={{
               transform: `translateX(-${instructorIndex * (100 / 4 + 0.75)}%)`,
             }}
@@ -291,14 +291,14 @@ export default function InstructorsAndPartners() {
             {instructors.map((inst) => (
               <div
                 key={inst.id}
-                className="w-full sm:w-[calc(50%-16px)] lg:w-[calc(25%-24px)] flex-shrink-0 relative group select-none"
+                className="w-[calc(50%-6px)] sm:w-[calc(50%-16px)] lg:w-[calc(25%-24px)] flex-shrink-0 relative group select-none"
               >
                 {/* Outer Relative Frame */}
                 <div className="relative w-full">
                   
                   {/* Photo area with exact SVG Cutout Notch */}
                   <div 
-                    className="relative w-full aspect-[4/4.5] bg-[#E2E5EB] dark:bg-slate-800 overflow-hidden"
+                    className="relative w-full aspect-[4/4] sm:aspect-[4/4.5] bg-[#E2E5EB] dark:bg-slate-800 overflow-hidden"
                     style={{
                       clipPath: "url(#instructor-card-notch)",
                     }}
@@ -316,8 +316,8 @@ export default function InstructorsAndPartners() {
                     <div className="absolute inset-0 bg-[#8578FB]/75 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out z-10 pointer-events-none" />
                   </div>
 
-                  {/* 3 Large Circular Social Buttons sitting in the top-right notch */}
-                  <div className="absolute top-2.5 right-0.5 flex flex-col gap-2.5 z-20">
+                  {/* 3 Large Circular Social Buttons sitting in the top-right notch - hidden on mobile */}
+                  <div className="absolute top-2.5 right-0.5 flex-col gap-2.5 z-20 hidden sm:flex">
                     <Link
                       href="#"
                       aria-label="Facebook"
@@ -342,8 +342,8 @@ export default function InstructorsAndPartners() {
                   </div>
 
                   {/* Elevated White Card overlapping the bottom of photo */}
-                  <div className="relative -mt-12 mx-3 bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-4.5 shadow-xl border border-slate-100 dark:border-slate-800 text-center z-20 transition-transform duration-300 group-hover:-translate-y-1">
-                    <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#4A3AFF] transition-colors leading-snug">
+                  <div className="relative -mt-8 sm:-mt-12 mx-1.5 sm:mx-3 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl p-2.5 sm:p-4 shadow-xl border border-slate-100 dark:border-slate-800 text-center z-20 transition-transform duration-300 group-hover:-translate-y-1">
+                    <h3 className="text-xs sm:text-lg font-bold text-slate-900 dark:text-white group-hover:text-[#4A3AFF] transition-colors leading-snug truncate">
                       {inst.name}
                     </h3>
                     <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">
@@ -351,10 +351,10 @@ export default function InstructorsAndPartners() {
                     </p>
 
                     {/* Faint Dashed Divider matching image */}
-                    <div className="border-t border-dashed border-indigo-100 dark:border-slate-800 my-2.5" />
+                    <div className="border-t border-dashed border-indigo-100 dark:border-slate-800 my-1.5 sm:my-2.5" />
 
                     {/* Meta Row: Courses & Students */}
-                    <div className="flex items-center justify-between text-xs font-semibold px-1">
+                    <div className="flex items-center justify-between text-xs font-semibold px-0 sm:px-1 gap-1">
                       <div className="flex items-center gap-1.5 text-[#4A3AFF] dark:text-indigo-300">
                         <BookOpen className="w-3.5 h-3.5" />
                         <span className="text-slate-600 dark:text-slate-300 text-[11px] sm:text-xs font-bold">{inst.courses} Courses</span>
@@ -406,7 +406,7 @@ export default function InstructorsAndPartners() {
           <button 
             onClick={handlePrevBrand} 
             aria-label="Previous Brand"
-            className="absolute left-1 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-800 border border-indigo-100/90 dark:border-slate-700 hover:bg-[#4A3AFF] dark:hover:bg-[#4A3AFF] hover:border-transparent hover:text-white text-slate-500 dark:text-slate-300 shadow-md flex items-center justify-center transition-all duration-200 z-20 cursor-pointer"
+            className="absolute left-1 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-800 border border-indigo-100/90 dark:border-slate-700 hover:bg-[#4A3AFF] dark:hover:bg-[#4A3AFF] hover:border-transparent hover:text-white text-slate-500 dark:text-slate-300 shadow-md hidden sm:flex items-center justify-center transition-all duration-200 z-20 cursor-pointer"
           >
             <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
@@ -415,7 +415,7 @@ export default function InstructorsAndPartners() {
           <button 
             onClick={handleNextBrand} 
             aria-label="Next Brand"
-            className="absolute right-1 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-800 border border-indigo-100/90 dark:border-slate-700 hover:bg-[#4A3AFF] dark:hover:bg-[#4A3AFF] hover:border-transparent hover:text-white text-slate-500 dark:text-slate-300 shadow-md flex items-center justify-center transition-all duration-200 z-20 cursor-pointer"
+            className="absolute right-1 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white dark:bg-slate-800 border border-indigo-100/90 dark:border-slate-700 hover:bg-[#4A3AFF] dark:hover:bg-[#4A3AFF] hover:border-transparent hover:text-white text-slate-500 dark:text-slate-300 shadow-md hidden sm:flex items-center justify-center transition-all duration-200 z-20 cursor-pointer"
           >
             <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>

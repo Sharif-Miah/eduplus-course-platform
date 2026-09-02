@@ -89,8 +89,8 @@ export default function LatestNewsSection() {
             LATEST NEWS
           </p>
           <div className="relative inline-block">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-              Read Some Store About <br />
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+              Read Some Store About <br className="hidden sm:inline" />
               News & Blog
             </h2>
             {/* Hand-drawn blue wavy underline */}
@@ -109,7 +109,7 @@ export default function LatestNewsSection() {
           onMouseLeave={() => setIsPaused(false)}
         >
           <div
-            className="flex transition-transform duration-700 ease-in-out gap-6 sm:gap-8"
+            className="flex transition-transform duration-700 ease-in-out gap-3 sm:gap-8"
             style={{
               transform: `translateX(-${currentIndex * (100 / 3 + 1.2)}%)`,
             }}
@@ -117,13 +117,13 @@ export default function LatestNewsSection() {
             {blogs.map((blog) => (
               <div
                 key={blog.id}
-                className="w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-18px)] flex-shrink-0 relative group select-none"
+                className="w-[calc(50%-6px)] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-18px)] flex-shrink-0 relative group select-none"
               >
                 {/* Main Card */}
                 <div className="relative w-full">
                   
                   {/* Photo Container with Top-to-Bottom Sliding Dark Hover Shadow */}
-                  <div className="relative w-full aspect-[16/11] rounded-3xl overflow-hidden bg-slate-200 dark:bg-slate-800 shadow-md">
+                  <div className="relative w-full aspect-[4/3] sm:aspect-[16/11] rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-200 dark:bg-slate-800 shadow-md">
                     <Image
                       src={blog.thumbnail}
                       alt={blog.title}
@@ -136,17 +136,17 @@ export default function LatestNewsSection() {
                     <div className="absolute inset-0 bg-black/50 -translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-10 pointer-events-none" />
 
                     {/* Category Badge top-left */}
-                    <div className="absolute top-3.5 left-3.5 bg-[#4A3AFF] text-white text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-md z-20">
+                    <div className="absolute top-2 left-2 sm:top-3.5 sm:left-3.5 bg-[#4A3AFF] text-white text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-1 sm:gap-1.5 shadow-md z-20">
                       <FileText className="w-3.5 h-3.5" />
                       <span>{blog.category}</span>
                     </div>
                   </div>
 
                   {/* Elevated Overlapping White Content Card matching Screenshot */}
-                  <div className="relative -mt-10 mx-3 sm:mx-4 bg-white dark:bg-slate-900 rounded-2xl p-5 sm:p-6 shadow-xl border border-slate-100 dark:border-slate-800 text-left z-20 transition-transform duration-300 group-hover:-translate-y-1">
+                  <div className="relative -mt-6 sm:-mt-10 mx-2 sm:mx-4 bg-white dark:bg-slate-900 rounded-xl sm:rounded-2xl p-3 sm:p-6 shadow-xl border border-slate-100 dark:border-slate-800 text-left z-20 transition-transform duration-300 group-hover:-translate-y-1">
                     
                     {/* Meta Row: Author & Date */}
-                    <div className="flex items-center gap-4 text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2.5">
+                    <div className="flex items-center gap-2 sm:gap-4 text-[9px] sm:text-xs font-semibold text-slate-500 dark:text-slate-400 mb-1.5 sm:mb-2.5">
                       <div className="flex items-center gap-1.5">
                         <User className="w-3.5 h-3.5 text-[#4A3AFF]" />
                         <span>{blog.author}</span>
@@ -159,7 +159,7 @@ export default function LatestNewsSection() {
 
                     {/* Blog Heading */}
                     <Link href={`/blog/${blog.id}`}>
-                      <h3 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#4A3AFF] transition-colors mb-4">
+                      <h3 className="text-xs sm:text-lg font-bold text-slate-900 dark:text-white line-clamp-2 leading-snug group-hover:text-[#4A3AFF] transition-colors mb-2 sm:mb-4">
                         {blog.title}
                       </h3>
                     </Link>
@@ -168,7 +168,7 @@ export default function LatestNewsSection() {
                     <div className="pt-1">
                       <Link
                         href={`/blog/${blog.id}`}
-                        className="w-9 h-9 rounded-full bg-slate-50 dark:bg-slate-800 group-hover:bg-[#4A3AFF] dark:group-hover:bg-[#4A3AFF] text-slate-400 dark:text-slate-400 group-hover:text-white dark:group-hover:text-white border border-slate-100 dark:border-slate-700 group-hover:border-transparent flex items-center justify-center transition-all duration-300 shadow-sm"
+                        className="w-7 h-7 sm:w-9 sm:h-9 rounded-full bg-slate-50 dark:bg-slate-800 group-hover:bg-[#4A3AFF] dark:group-hover:bg-[#4A3AFF] text-slate-400 dark:text-slate-400 group-hover:text-white dark:group-hover:text-white border border-slate-100 dark:border-slate-700 group-hover:border-transparent flex items-center justify-center transition-all duration-300 shadow-sm"
                       >
                         <ArrowRight className="w-4 h-4" />
                       </Link>

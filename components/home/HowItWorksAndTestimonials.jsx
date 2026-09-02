@@ -96,7 +96,7 @@ export default function HowItWorksAndTestimonials() {
               WORKING PROCESS
             </p>
             <div className="relative inline-block">
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
                 How It Work
               </h2>
               {/* Hand-drawn blue wavy underline */}
@@ -125,7 +125,7 @@ export default function HowItWorksAndTestimonials() {
               <span className="text-3xl font-bold tracking-tighter">{"»»"}</span>
             </div>
 
-            <div className="relative aspect-[16/8] sm:aspect-[21/9] rounded-[32px] overflow-hidden shadow-2xl bg-slate-900 z-10 group border-4 border-white dark:border-slate-800">
+            <div className="relative aspect-[16/10] sm:aspect-[16/8] md:aspect-[21/9] rounded-[24px] sm:rounded-[32px] overflow-hidden shadow-2xl bg-slate-900 z-10 group border-4 border-white dark:border-slate-800">
               <Image
                 src="/assets/home/how_it_works_video.jpg"
                 alt="Students collaborating"
@@ -198,8 +198,8 @@ export default function HowItWorksAndTestimonials() {
                 TESTIMONIALS
               </p>
               <div className="relative inline-block">
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-                  People’s Say About Our <br className="hidden sm:inline" />
+                <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+                  People's Say About Our <br className="hidden sm:inline" />
                   Edplus
                 </h2>
                 {/* Hand-drawn blue wavy underline */}
@@ -272,7 +272,7 @@ export default function HowItWorksAndTestimonials() {
                 {testimonials.map((item) => (
                   <div
                     key={item.id}
-                    className="w-full sm:w-[calc(50%-12px)] flex-shrink-0 bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 shadow-md hover:shadow-2xl border border-slate-100/90 dark:border-slate-800 flex flex-col justify-between relative transition-all duration-300"
+                    className="w-full sm:w-[calc(50%-12px)] flex-shrink-0 bg-white dark:bg-slate-900 rounded-3xl p-5 sm:p-7 shadow-md hover:shadow-2xl border border-slate-100/90 dark:border-slate-800 flex flex-col justify-between relative transition-all duration-300"
                   >
                     <div>
                       {/* Author Info */}

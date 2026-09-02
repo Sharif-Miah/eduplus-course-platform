@@ -8,7 +8,7 @@ import { getImageUrl } from "@/lib/utils";
 
 export default function HeroSection({ featuredCourse }) {
   return (
-    <section className="relative overflow-hidden min-h-[calc(100vh-5rem)] flex items-center justify-center bg-slate-900">
+    <section className="relative overflow-hidden min-h-[auto] sm:min-h-[calc(100vh-5rem)] flex items-center justify-center bg-slate-900">
       {/* Background Image: Clearly visible students with subtle text-shadow gradient */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -24,11 +24,11 @@ export default function HeroSection({ featuredCourse }) {
 
       {/* Floating Animated Geometric & Star Elements */}
       <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden">
-        {/* Left organic blue droplet */}
-        <div className="absolute top-[38%] left-3 sm:left-10 w-9 h-14 bg-[#0070F3] rounded-[40%_60%_70%_30%/40%_50%_60%_50%] -rotate-12 opacity-95 shadow-lg shadow-blue-500/30 animate-float" />
+        {/* Left organic blue droplet - hidden on mobile */}
+        <div className="absolute top-[38%] left-3 sm:left-10 w-9 h-14 bg-[#0070F3] rounded-[40%_60%_70%_30%/40%_50%_60%_50%] -rotate-12 opacity-95 shadow-lg shadow-blue-500/30 animate-float hidden sm:block" />
 
-        {/* Right organic green droplet next to heading */}
-        <div className="absolute top-[28%] left-[45%] sm:left-[42%] w-10 h-14 bg-[#10B981] rounded-[60%_40%_30%_70%/60%_30%_70%_40%] rotate-45 opacity-95 shadow-lg shadow-emerald-500/30 animate-float-slow" />
+        {/* Right organic green droplet next to heading - hidden on mobile */}
+        <div className="absolute top-[28%] left-[45%] sm:left-[42%] w-10 h-14 bg-[#10B981] rounded-[60%_40%_30%_70%/60%_30%_70%_40%] rotate-45 opacity-95 shadow-lg shadow-emerald-500/30 animate-float-slow hidden sm:block" />
 
         {/* Top-right sparkle stars */}
         <div className="absolute top-12 right-20 sm:right-32 animate-pulse">
@@ -47,15 +47,15 @@ export default function HeroSection({ featuredCourse }) {
           </svg>
         </div>
 
-        {/* Bottom-right yellow floating oval */}
-        <div className="absolute bottom-28 right-8 sm:right-16 w-12 h-6 bg-[#F59E0B] rounded-full rotate-12 opacity-95 shadow-md shadow-amber-500/30 animate-float-reverse" />
+        {/* Bottom-right yellow floating oval - hidden on mobile */}
+        <div className="absolute bottom-28 right-8 sm:right-16 w-12 h-6 bg-[#F59E0B] rounded-full rotate-12 opacity-95 shadow-md shadow-amber-500/30 animate-float-reverse hidden sm:block" />
       </div>
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 relative z-20 py-16 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 relative z-20 py-10 sm:py-16 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-12 items-center">
 
           {/* Left Column: Headline & Action Buttons */}
-          <div className="lg:col-span-6 space-y-6 text-left">
+          <div className="lg:col-span-6 space-y-4 sm:space-y-6 text-left">
             {/* Pill Badge */}
             <div className="inline-flex items-center gap-2 bg-[#4A3AFF] text-white text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full shadow-lg shadow-indigo-600/40">
               <GraduationCap className="w-4 h-4" />
@@ -63,7 +63,7 @@ export default function HeroSection({ featuredCourse }) {
             </div>
 
             {/* Main Headline matching mockup */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] drop-shadow-md">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-[1.12] drop-shadow-md">
               Best Online <br />
               Courses <br />
               From EduPlus
@@ -99,28 +99,28 @@ export default function HeroSection({ featuredCourse }) {
           </div>
 
           {/* Right Area: Center Floating 2-Card Stack + Featured Course Card */}
-          <div className="lg:col-span-6 relative flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-5 sm:gap-6">
+          <div className="lg:col-span-6 relative flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-4 sm:gap-6">
 
             {/* 2 Stacked/Connected Experience Stats Cards */}
             <div className="flex flex-row sm:flex-col gap-3 w-full sm:w-44 z-20">
 
               {/* White Card: 250+ Enrolled Students */}
-              <div className="flex-1 bg-white text-slate-900 rounded-2xl p-5 shadow-2xl border border-slate-100 flex flex-col items-center text-center animate-float">
-                <div className="w-12 h-12 rounded-full bg-indigo-50/80 flex items-center justify-center text-[#4A3AFF] mb-1.5">
-                  <GraduationCap className="w-7 h-7" />
+              <div className="flex-1 bg-white text-slate-900 rounded-2xl p-3 sm:p-5 shadow-2xl border border-slate-100 flex flex-col items-center text-center animate-float">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-indigo-50/80 flex items-center justify-center text-[#4A3AFF] mb-1.5">
+                  <GraduationCap className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
-                <h4 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                <h4 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
                   <CountUp end={250} suffix="+" duration={1800} />
                 </h4>
                 <p className="text-[11px] text-slate-500 font-medium mt-0.5">Enrolled Students</p>
               </div>
 
               {/* Royal Blue Card: 3652+ Finished Session */}
-              <div className="flex-1 bg-[#4A3AFF] text-white rounded-2xl p-5 shadow-2xl flex flex-col items-center text-center animate-float-reverse">
-                <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center text-white mb-1.5">
+              <div className="flex-1 bg-[#4A3AFF] text-white rounded-2xl p-3 sm:p-5 shadow-2xl flex flex-col items-center text-center animate-float-reverse">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/15 flex items-center justify-center text-white mb-1.5">
                   <BookOpen className="w-6 h-6" />
                 </div>
-                <h4 className="text-2xl font-extrabold text-white tracking-tight">
+                <h4 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
                   <CountUp end={3652} suffix="+" duration={2000} />
                 </h4>
                 <p className="text-[11px] text-indigo-100 font-medium mt-0.5">Finished Session</p>
@@ -128,7 +128,7 @@ export default function HeroSection({ featuredCourse }) {
             </div>
 
             {/* Featured Course Card matching mockup (Dynamic from Backend) */}
-            <div className="w-full max-w-[340px] bg-white rounded-3xl p-4 shadow-2xl border border-slate-100 text-slate-900 hover:shadow-indigo-500/20 transition-all duration-300 z-10 group/card">
+            <div className="w-full max-w-[300px] sm:max-w-[340px] bg-white rounded-3xl p-3 sm:p-4 shadow-2xl border border-slate-100 text-slate-900 hover:shadow-indigo-500/20 transition-all duration-300 z-10 group/card">
               {/* Card Image with Programming/Category Badge & Camera Icon */}
               <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-3.5 bg-slate-100">
                 <Image

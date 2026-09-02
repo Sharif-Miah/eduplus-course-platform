@@ -76,10 +76,10 @@ export default function AboutExperienceSection() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column: Creative Image Collage (Image 1 Style) */}
-          <div className="lg:col-span-6 relative flex items-center justify-center min-h-[460px] sm:min-h-[520px]">
+          <div className="lg:col-span-6 relative flex items-center justify-center min-h-[360px] sm:min-h-[520px]">
             
             {/* Top-left decorative wavy lines */}
-            <div className="absolute top-2 left-6 text-indigo-400 opacity-80 animate-float-slow">
+            <div className="absolute top-2 left-6 text-indigo-400 opacity-80 animate-float-slow hidden sm:block">
               <svg width="40" height="60" viewBox="0 0 40 60" fill="none">
                 <path d="M5 5C15 15 5 25 15 35C25 45 15 55 25 65" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
                 <path d="M18 5C28 15 18 25 28 35C38 45 28 55 38 65" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
@@ -87,13 +87,13 @@ export default function AboutExperienceSection() {
             </div>
 
             {/* Top "love" colorful doodle with sparkles */}
-            <div className="absolute -top-4 right-1/4 text-rose-500 font-serif italic text-lg sm:text-2xl font-bold tracking-wider opacity-90 rotate-6 flex items-center gap-1 animate-pulse">
+            <div className="absolute -top-4 right-1/4 text-rose-500 font-serif italic text-lg sm:text-2xl font-bold tracking-wider opacity-90 rotate-6 flex items-center gap-1 animate-pulse hidden sm:flex">
               <span>love</span>
               <Heart className="w-4 h-4 fill-rose-500" />
             </div>
 
             {/* Bottom-left dot grid */}
-            <div className="absolute bottom-6 left-8 opacity-40">
+            <div className="absolute bottom-6 left-8 opacity-40 hidden sm:block">
               <div className="grid grid-cols-5 gap-1.5">
                 {[...Array(25)].map((_, i) => (
                   <div key={i} className="w-1 h-1 bg-[#4A3AFF] rounded-full" />
@@ -102,12 +102,12 @@ export default function AboutExperienceSection() {
             </div>
 
             {/* Watermark outline graduation cap */}
-            <div className="absolute -bottom-6 right-2 text-slate-100 dark:text-slate-800 -z-0 pointer-events-none">
+            <div className="absolute -bottom-6 right-2 text-slate-100 dark:text-slate-800 -z-0 pointer-events-none hidden sm:block">
               <GraduationCap className="w-44 h-44 stroke-[1]" />
             </div>
 
             {/* Pill Shaped Photo 1 (Studying at table) */}
-            <div className="relative w-52 sm:w-64 h-80 sm:h-96 rounded-[70px] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10 -translate-x-8 sm:-translate-x-12">
+            <div className="relative w-40 sm:w-64 h-64 sm:h-96 rounded-[70px] overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-10 -translate-x-4 sm:-translate-x-12">
               <Image
                 src="/assets/home/about_student_study.jpg"
                 alt="Students studying"
@@ -118,7 +118,7 @@ export default function AboutExperienceSection() {
             </div>
 
             {/* Circular Photo 2 (Student with glasses & books on teal background) */}
-            <div className="relative w-52 sm:w-64 h-52 sm:h-64 rounded-full overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-20 -translate-x-6 sm:-translate-x-10 translate-y-8 bg-[#14C88C]">
+            <div className="relative w-40 sm:w-64 h-40 sm:h-64 rounded-full overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 z-20 -translate-x-2 sm:-translate-x-10 translate-y-8 bg-[#14C88C]">
               <Image
                 src="/assets/home/about_student_portrait.jpg"
                 alt="University Student"
@@ -129,7 +129,7 @@ export default function AboutExperienceSection() {
             </div>
 
             {/* Floating Experience Advisor Card (Image 1 Style) */}
-            <div className="absolute bottom-14 left-4 sm:left-10 z-30 bg-white dark:bg-slate-900 rounded-2xl p-4 sm:p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col items-center gap-2 text-center animate-float">
+            <div className="absolute bottom-14 left-2 sm:left-10 z-30 bg-white dark:bg-slate-900 rounded-2xl p-3 sm:p-5 shadow-2xl border border-slate-100 dark:border-slate-800 flex flex-col items-center gap-2 text-center animate-float">
               <div className="w-12 h-12 rounded-full bg-[#4A3AFF] text-white flex items-center justify-center shadow-md">
                 <GraduationCap className="w-6 h-6" />
               </div>
@@ -147,8 +147,8 @@ export default function AboutExperienceSection() {
               <p className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#4A3AFF] mb-2">
                 ABOUT OUR EDPLUS
               </p>
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-                We create unique digital media <br />
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+                We create unique digital media <br className="hidden sm:inline" />
                 experiences.
               </h2>
               {/* Hand-drawn blue wavy underline */}
@@ -230,7 +230,7 @@ export default function AboutExperienceSection() {
         </div>
 
         {/* Bottom Curved Stats Banner (Image 1 & 2 Style) */}
-        <div className="mt-20 bg-[#4A3AFF] rounded-[32px] p-8 sm:p-12 shadow-2xl text-white">
+        <div className="mt-14 sm:mt-20 bg-[#4A3AFF] rounded-[24px] sm:rounded-[32px] p-6 sm:p-12 shadow-2xl text-white">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 sm:gap-6 divide-y md:divide-y-0 md:divide-x divide-white/20">
             {stats.map((stat, index) => (
               <div

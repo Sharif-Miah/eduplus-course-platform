@@ -7,10 +7,10 @@ export default function CtaBanners() {
   return (
     <section className="pt-24 pb-20 bg-white dark:bg-[#0b1120] relative overflow-visible transition-colors duration-200">
       <div className="container max-w-7xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-16 lg:gap-10">
           
           {/* Card 1: Get Free Courses (Exact Mockup Match with Pop-Out Head) */}
-          <div className="relative bg-[#4A3AFF] rounded-[32px] p-8 sm:p-10 lg:p-12 text-white shadow-2xl flex flex-col justify-between min-h-[300px] overflow-visible">
+          <div className="relative bg-[#4A3AFF] rounded-[24px] sm:rounded-[32px] p-6 sm:p-10 lg:p-12 text-white shadow-2xl flex flex-col justify-between min-h-[250px] sm:min-h-[300px] overflow-visible">
             
             {/* Subtle Grid Pattern Overlay (contained within card) */}
             <div className="absolute inset-0 rounded-[32px] overflow-hidden pointer-events-none">
@@ -62,7 +62,7 @@ export default function CtaBanners() {
             </div>
 
             {/* Right Cutout Image: Female Teacher with Pop-Out Head & Yellow Folder */}
-            <div className="absolute -top-14 sm:-top-16 lg:-top-20 right-0 sm:right-2 lg:right-4 w-52 sm:w-60 lg:w-72 h-[380px] sm:h-[420px] lg:h-[450px] pointer-events-none z-30 flex items-end justify-end">
+            <div className="absolute -top-10 sm:-top-16 lg:-top-20 right-0 sm:right-2 lg:right-4 w-40 sm:w-60 lg:w-72 h-[300px] sm:h-[420px] lg:h-[450px] pointer-events-none z-30 flex items-end justify-end hidden sm:flex">
               <div className="relative w-full h-full">
                 <Image
                   src="/assets/home/cta_teacher.png"
@@ -77,7 +77,7 @@ export default function CtaBanners() {
           </div>
 
           {/* Card 2: Become a Tutor (Exact Mockup Match with Pop-Out Head) */}
-          <div className="relative bg-[#4A3AFF] rounded-[32px] p-8 sm:p-10 lg:p-12 text-white shadow-2xl flex flex-col justify-between min-h-[300px] overflow-visible">
+          <div className="relative bg-[#4A3AFF] rounded-[24px] sm:rounded-[32px] p-6 sm:p-10 lg:p-12 text-white shadow-2xl flex flex-col justify-between min-h-[250px] sm:min-h-[300px] overflow-visible">
             
             {/* Subtle Grid Pattern Overlay (contained within card) */}
             <div className="absolute inset-0 rounded-[32px] overflow-hidden pointer-events-none">
@@ -135,7 +135,7 @@ export default function CtaBanners() {
             </div>
 
             {/* Right Cutout Image: Male Tutor with Pop-Out Head & Raised Fist */}
-            <div className="absolute -top-14 sm:-top-16 lg:-top-20 right-0 sm:right-2 lg:right-4 w-52 sm:w-60 lg:w-72 h-[380px] sm:h-[420px] lg:h-[450px] pointer-events-none z-30 flex items-end justify-end">
+            <div className="absolute -top-10 sm:-top-16 lg:-top-20 right-0 sm:right-2 lg:right-4 w-40 sm:w-60 lg:w-72 h-[300px] sm:h-[420px] lg:h-[450px] pointer-events-none z-30 flex items-end justify-end hidden sm:flex">
               <div className="relative w-full h-full">
                 <Image
                   src="/assets/home/cta_tutor.png"

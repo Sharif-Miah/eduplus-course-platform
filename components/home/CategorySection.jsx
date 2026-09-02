@@ -168,8 +168,8 @@ export default function CategorySection({ categories = [] }) {
             TOP CATEGORY
           </p>
           <div className="relative inline-block">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-              Browse Our Online Course <br />
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+              Browse Our Online Course <br className="hidden sm:inline" />
               Categories
             </h2>
             {/* Hand-drawn blue wavy underline accent */}
