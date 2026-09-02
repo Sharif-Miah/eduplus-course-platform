@@ -199,7 +199,7 @@ export default function HowItWorksAndTestimonials() {
               </p>
               <div className="relative inline-block">
                 <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
-                  People's Say About Our <br className="hidden sm:inline" />
+                  People&apos;s Say About Our <br className="hidden sm:inline" />
                   Edplus
                 </h2>
                 {/* Hand-drawn blue wavy underline */}
