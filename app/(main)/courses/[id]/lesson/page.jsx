@@ -3,8 +3,11 @@ import { getCourseDetails } from "@/queries/courses";
 import { replaceMongoIdInArray, replaceMongoIdInObject } from "@/lib/convertData";
 import { getLessonBySlug } from "@/queries/lessons";
 import { LessonVideo } from "./_components/lesson-video";
+import { DownloadCertificate } from "./_components/download-certificate";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { getLoggedInUser } from "@/lib/loggedin-user";
+import { Watch } from "@/model/watch-model";
 import { 
   PlayCircle, 
   CheckCircle2, 
@@ -15,7 +18,9 @@ import {
   Sparkles,
   Layers,
   HelpCircle,
-  Clock
+  Clock,
+  Lock,
+  Award
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -32,22 +37,60 @@ const Course = async ({ params, searchParams }) => {
     notFound();
   }
 
+  const loggedinUser = await getLoggedInUser();
+
   const modulesArray = course?.modules || [];
   const allModules = [...replaceMongoIdInArray(modulesArray)].sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  // Flatten all lessons with their module slug for seamless Next/Prev navigation
+  // Flatten all lessons with their module slug for sequential navigation
   const allLessonsFlat = allModules.flatMap((m) =>
-    (m.lessonIds || []).map((l) => ({
+    (m.lessonIds || []).sort((a, b) => (a.order || 0) - (b.order || 0)).map((l) => ({
       ...l,
       moduleSlug: m.slug,
       moduleTitle: m.title,
     }))
   );
 
-  const defaultLesson = allLessonsFlat[0] ? replaceMongoIdInObject(allLessonsFlat[0]) : null;
-  const currentLessonData = name ? await getLessonBySlug(name) : defaultLesson;
-  const lessonToPlay = currentLessonData ? replaceMongoIdInObject(currentLessonData) : null;
-  const currentModuleSlug = selectedModule ?? (allModules[0]?.slug || "");
+  // Fetch all completed watches for this user
+  const completedWatches = loggedinUser?.id
+    ? await Watch.find({ user: loggedinUser.id, state: "completed" }).lean()
+    : [];
+  const completedLessonIds = new Set(completedWatches.map((w) => w.lesson?.toString()));
+
+  // Mark completed state on flat lessons
+  allLessonsFlat.forEach((l) => {
+    const lId = l.id || l._id?.toString();
+    if (completedLessonIds.has(lId)) {
+      l.state = "completed";
+    }
+  });
+
+  // Calculate sequential unlock: only lessons up to lastCompletedIndex + 1 are accessible
+  let lastCompletedIndex = -1;
+  for (let i = 0; i < allLessonsFlat.length; i++) {
+    if (allLessonsFlat[i].state === "completed") {
+      lastCompletedIndex = i;
+    }
+  }
+
+  const maxUnlockedIndex = Math.max(0, lastCompletedIndex + 1);
+
+  // Check requested index
+  let requestedIndex = allLessonsFlat.findIndex(
+    (l) => (l.slug === name) || (l.id === name) || (l._id?.toString() === name)
+  );
+  if (requestedIndex === -1) {
+    requestedIndex = 0;
+  }
+
+  // If user tries to access a locked lesson, play the latest unlocked lesson
+  const activeIndex = requestedIndex <= maxUnlockedIndex ? requestedIndex : maxUnlockedIndex;
+  const lessonToPlay = allLessonsFlat[activeIndex] ? replaceMongoIdInObject(allLessonsFlat[activeIndex]) : null;
+  const currentModuleSlug = selectedModule ?? (allLessonsFlat[activeIndex]?.moduleSlug || allModules[0]?.slug || "");
+
+  const totalLessons = allLessonsFlat.length;
+  const totalCompletedLessons = allLessonsFlat.filter((l) => l.state === "completed").length;
+  const isCourseFullyCompleted = totalLessons > 0 && totalCompletedLessons === totalLessons;
 
   if (!lessonToPlay) {
     return (
@@ -64,12 +107,9 @@ const Course = async ({ params, searchParams }) => {
   }
 
   // Calculate Next & Prev Lesson
-  const currentIndex = allLessonsFlat.findIndex(
-    (l) => (l.slug === lessonToPlay.slug) || (l.id === lessonToPlay.id) || (l._id?.toString() === lessonToPlay.id)
-  );
-
-  const prevLesson = currentIndex > 0 ? allLessonsFlat[currentIndex - 1] : null;
-  const nextLesson = currentIndex >= 0 && currentIndex < allLessonsFlat.length - 1 ? allLessonsFlat[currentIndex + 1] : null;
+  const prevLesson = activeIndex > 0 ? allLessonsFlat[activeIndex - 1] : null;
+  const nextLessonCandidate = activeIndex < allLessonsFlat.length - 1 ? allLessonsFlat[activeIndex + 1] : null;
+  const isNextUnlocked = (activeIndex + 1) <= maxUnlockedIndex;
 
   // Find module title
   const currentModuleObj = allModules.find((m) => m.slug === currentModuleSlug) || allModules[0];
@@ -78,7 +118,7 @@ const Course = async ({ params, searchParams }) => {
     <div className="space-y-6 max-w-5xl mx-auto pb-16">
       
       {/* 1. CINEMA VIDEO PLAYER CONTAINER */}
-      <div className="bg-slate-950 rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 ring-1 ring-slate-200/80 dark:ring-slate-700 relative">
+      <div className="bg-slate-950 rounded-3xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 ring-1 ring-slate-200/80 dark:ring-slate-700 relative p-2 sm:p-3">
         <LessonVideo courseId={id} lesson={lessonToPlay} module={currentModuleSlug} />
       </div>
 
@@ -136,23 +176,86 @@ const Course = async ({ params, searchParams }) => {
               </button>
             )}
 
-            {nextLesson ? (
-              <Link
-                href={`/courses/${id}/lesson?name=${nextLesson.slug}&module=${nextLesson.moduleSlug}`}
-                className="inline-flex items-center gap-1.5 bg-[#4A3AFF] hover:bg-[#3D2FE6] text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-2xl shadow-md shadow-indigo-500/20 transition-all hover:scale-105"
-              >
-                <span>Next Lesson</span>
-                <ChevronRight className="w-4 h-4" />
-              </Link>
-            ) : (
-              <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs sm:text-sm font-extrabold px-4 py-2.5 rounded-2xl border border-emerald-200 dark:border-emerald-900/60">
+            {nextLessonCandidate ? (
+              isNextUnlocked ? (
+                <Link
+                  href={`/courses/${id}/lesson?name=${nextLessonCandidate.slug}&module=${nextLessonCandidate.moduleSlug}`}
+                  className="inline-flex items-center gap-1.5 bg-[#4A3AFF] hover:bg-[#3D2FE6] text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-2xl shadow-md shadow-indigo-500/20 transition-all hover:scale-105"
+                >
+                  <span>Next Lesson</span>
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
+              ) : (
+                <button
+                  disabled
+                  className="inline-flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/70 text-slate-400 dark:text-slate-500 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-2xl opacity-60 cursor-not-allowed border border-slate-200/60 dark:border-slate-700"
+                  title="Watch or complete the current video to unlock Next Lesson"
+                >
+                  <Lock className="w-3.5 h-3.5" />
+                  <span>Next Lesson (Locked)</span>
+                </button>
+              )
+            ) : isCourseFullyCompleted ? (
+              <span className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs sm:text-sm font-extrabold px-4 py-2.5 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 shadow-xs">
                 <Sparkles className="w-4 h-4 text-emerald-600" />
-                <span>All Lessons Done!</span>
+                <span>All {totalLessons} Lessons Done! (100%)</span>
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 text-xs sm:text-sm font-bold px-4 py-2.5 rounded-2xl border border-amber-200 dark:border-amber-900/60">
+                <Clock className="w-4 h-4 text-amber-600" />
+                <span>{totalCompletedLessons} of {totalLessons} Lessons Completed</span>
               </span>
             )}
           </div>
 
         </div>
+
+        {/* 3. COURSE COMPLETION & CERTIFICATE DOWNLOAD BANNER */}
+        {isCourseFullyCompleted ? (
+          <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-indigo-500/10 border-2 border-emerald-500/30 dark:border-emerald-500/30 rounded-3xl p-5 sm:p-6 flex flex-col md:flex-row items-center justify-between gap-5 shadow-xs animate-in fade-in duration-300">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-500/25">
+                <Award className="w-6 h-6" />
+              </div>
+              <div className="space-y-1">
+                <span className="inline-flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full">
+                  <Sparkles className="w-3 h-3" />
+                  <span>100% Course Completed</span>
+                </span>
+                <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">
+                  Congratulations! You Completed All Lessons
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 font-medium max-w-xl">
+                  You have successfully completed all {totalLessons} lessons. Your official Certificate of Completion is unlocked and ready for download!
+                </p>
+              </div>
+            </div>
+
+            <div className="w-full md:w-auto flex-shrink-0 min-w-[240px]">
+              <DownloadCertificate courseId={id} totalProgress={100} />
+            </div>
+          </div>
+        ) : (
+          <div className="bg-slate-50/80 dark:bg-slate-900/50 border border-slate-200/70 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-500 flex items-center justify-center flex-shrink-0">
+                <Lock className="w-4 h-4" />
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-200">
+                  Official Certificate Locked
+                </h4>
+                <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+                  Complete all {totalLessons} video lessons ({totalCompletedLessons} of {totalLessons} done) to unlock and download your certificate.
+                </p>
+              </div>
+            </div>
+
+            <div className="text-xs font-extrabold text-[#4A3AFF] bg-indigo-50 dark:bg-indigo-950/60 px-3 py-1 rounded-xl border border-indigo-100 dark:border-indigo-900/40">
+              {totalLessons > 0 ? Math.round((totalCompletedLessons / totalLessons) * 100) : 0}% Done
+            </div>
+          </div>
+        )}
 
         {/* 3. INTERACTIVE TABS (Overview, Lesson Notes & Resources) */}
         <Tabs defaultValue="notes" className="w-full pt-1">

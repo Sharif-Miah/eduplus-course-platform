@@ -7,11 +7,11 @@ import { cn } from "@/lib/utils";
 
 export const DownloadCertificate = ({ courseId, totalProgress }) => {
   const [isCertificateDownloading, setIsCertificateDownloading] = useState(false);
-  const isUnlocked = totalProgress >= 100;
+  const isUnlocked = Number(totalProgress) >= 100;
 
   async function handleCertificateDownload() {
     if (!isUnlocked) {
-      toast.info("Please complete all modules to unlock your certificate.");
+      toast.info("Please complete all lessons (100% required) to unlock your certificate.");
       return;
     }
 

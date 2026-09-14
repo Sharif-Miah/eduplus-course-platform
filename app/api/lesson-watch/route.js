@@ -13,7 +13,7 @@ const COMPLETED = "completed";
 
 async function updateReport(userId, courseId, moduleId, lessonId) {
     try {
-        createWatchReport({userId, courseId, moduleId, lessonId})
+        await createWatchReport({userId, courseId, moduleId, lessonId})
     } catch (err) {
         throw new Error(err);
     }
@@ -70,15 +70,13 @@ export async function POST(request) {
             if (!found) {
                 watchEntry["created_at"] = Date.now();
                 await Watch.create(watchEntry);
-                await updateReport(loggedinUser.id, courseId, currentModule.id, lessonId)
+                await updateReport(loggedinUser.id, courseId, currentModule.id, lessonId);
             } else {
-                if (found.state === STARTED) {
-                    watchEntry["modified_at"] = Date.now();
-                    await Watch.findByIdAndUpdate(found._id, {
-                        state: COMPLETED,
-                    });
-                    await updateReport(loggedinUser.id, courseId, currentModule.id, lessonId)
-                }
+                watchEntry["modified_at"] = Date.now();
+                await Watch.findByIdAndUpdate(found._id, {
+                    state: COMPLETED,
+                });
+                await updateReport(loggedinUser.id, courseId, currentModule.id, lessonId);
             }
         }
         return new NextResponse("Watch Record added Successfully.", {

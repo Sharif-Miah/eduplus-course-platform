@@ -17,31 +17,50 @@ export const CourseSidebar = async ({ courseId }) => {
 
   const loggedinUser = await getLoggedInUser();
   const report = await getAReport({ course: courseId, student: loggedinUser?.id });
-
-  const totalCompletedModules = report?.totalCompletedModeules ? report?.totalCompletedModeules.length : 0;
-  const totalModules = course?.modules ? course.modules.length : 0;
-  const totalProgress = totalModules > 0 ? Math.min(100, Math.round((totalCompletedModules / totalModules) * 100)) : 0;
-
-  const updatedModules = await Promise.all(
-    (course?.modules || []).map(async (module) => {
-      const moduleId = module._id ? module._id.toString() : module.id;
-      const lessons = module?.lessonIds || [];
-
-      const updatedLessons = await Promise.all(
-        lessons.map(async (lesson) => {
-          const lessonId = lesson._id ? lesson._id.toString() : lesson.id;
-          const watch = loggedinUser?.id
-            ? await Watch.findOne({ lesson: lessonId, module: moduleId, user: loggedinUser.id }).lean()
-            : null;
-          if (watch?.state === "completed") {
-            lesson.state = "completed";
-          }
-          return lesson;
-        })
-      );
-      return module;
-    })
+  // Fetch all completed watches for this user in one single efficient query
+  const completedWatches = loggedinUser?.id
+    ? await Watch.find({ user: loggedinUser.id, state: "completed" }).lean()
+    : [];
+  const completedLessonIds = new Set(
+    completedWatches.map((w) => w.lesson?.toString())
   );
+
+  const updatedModules = (course?.modules || []).map((module) => {
+    const lessons = module?.lessonIds || [];
+    lessons.forEach((lesson) => {
+      const lessonId = lesson._id ? lesson._id.toString() : lesson.id;
+      if (completedLessonIds.has(lessonId)) {
+        lesson.state = "completed";
+      }
+    });
+    return module;
+  });
+
+  // 1. Sort modules and flatten lessons in sequential order
+  const sortedModules = [...(updatedModules || [])].sort((a, b) => (a.order || 0) - (b.order || 0));
+  const allFlatLessons = sortedModules.flatMap((m) =>
+    (m.lessonIds || []).sort((a, b) => (a.order || 0) - (b.order || 0))
+  );
+
+  // 2. Sequential unlock: find index of last completed lesson
+  let lastCompletedIndex = -1;
+  for (let i = 0; i < allFlatLessons.length; i++) {
+    if (allFlatLessons[i]?.state === "completed") {
+      lastCompletedIndex = i;
+    }
+  }
+
+  // The next available lesson is lastCompletedIndex + 1 (Lesson 1 index 0 is always unlocked)
+  const maxUnlockedIndex = Math.max(0, lastCompletedIndex + 1);
+
+  allFlatLessons.forEach((lesson, index) => {
+    lesson.isUnlocked = index <= maxUnlockedIndex;
+  });
+
+  // 3. Accurate progress calculation
+  const totalLessons = allFlatLessons.length;
+  const totalCompletedLessons = allFlatLessons.filter((l) => l.state === "completed").length;
+  const totalProgress = totalLessons > 0 ? Math.min(100, Math.round((totalCompletedLessons / totalLessons) * 100)) : 0;
 
   const quizSet = course?.quizSet;
   const isQuizComplete = report?.quizAssessment ? true : false;
@@ -65,7 +84,7 @@ export const CourseSidebar = async ({ courseId }) => {
           <div className="flex items-center justify-between text-xs font-bold">
             <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-              <span>{totalCompletedModules} of {totalModules} Modules Done</span>
+              <span>{totalCompletedLessons} of {totalLessons} Lessons Completed</span>
             </span>
             <span className={totalProgress === 100 ? "text-emerald-600 dark:text-emerald-400 font-black" : "text-[#4A3AFF] font-black"}>
               {totalProgress}%

@@ -10,12 +10,30 @@ export const SidebarLessonItem = ({ courseId, lesson, module }) => {
   const activeSlug = searchParams?.get("name");
   const isActive = activeSlug === lesson.slug;
   const isComplete = lesson?.state === "completed";
+  const isUnlocked = lesson?.isUnlocked !== false;
+
+  if (!isUnlocked) {
+    return (
+      <div
+        className="flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium text-slate-400 dark:text-slate-500 bg-slate-50/50 dark:bg-slate-900/30 opacity-60 cursor-not-allowed select-none transition-colors border border-transparent"
+        title="Complete the previous lesson to unlock this lesson"
+      >
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          <Lock className="w-4 h-4 flex-shrink-0 text-slate-400 dark:text-slate-600" />
+          <span className="truncate">{lesson.title}</span>
+        </div>
+        <span className="text-[10px] font-mono flex-shrink-0 flex items-center gap-1 text-slate-400 dark:text-slate-600">
+          <span>Locked</span>
+        </span>
+      </div>
+    );
+  }
 
   return (
     <Link
       href={`/courses/${courseId}/lesson?name=${lesson.slug}&module=${module}`}
       className={cn(
-        "flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 group",
+        "flex items-center justify-between gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 group cursor-pointer",
         isActive
           ? "bg-[#4A3AFF] text-white shadow-md shadow-indigo-500/20"
           : isComplete

@@ -68,12 +68,14 @@ export async function createWatchReport(data) {
         const completedLessonsIds = report.totalCompletedLessons;
 
         const isModuleComplete = lessonIdsToCheck.every((lesson) =>
-            completedLessonsIds.includes(lesson)
+            completedLessonsIds.some(
+                (cId) => cId.toString() === lesson.toString()
+            )
         );
 
         if (isModuleComplete) {
             const foundModule = report.totalCompletedModeules.find(
-                (module) => module.toString() === data.moduleId
+                (m) => m.toString() === data.moduleId.toString()
             );
             if (!foundModule) {
                 report.totalCompletedModeules.push(
@@ -85,21 +87,17 @@ export async function createWatchReport(data) {
         // Check if the course has completed
         // If so, add the completion time.
         const course = await getCourseDetails(data.courseId);
-        console.log(course);
         const modulesInCourse = course?.modules;
         const moduleCount = modulesInCourse?.length ?? 0;
 
         const completedModule = report.totalCompletedModeules;
         const completedModuleCount = completedModule?.length ?? 0;
 
-        console.log(moduleCount, completedModuleCount);
-
         if (completedModuleCount >= 1 && completedModuleCount === moduleCount) {
-            console.log("Course completed");
             report.completion_date = Date.now();
         }
 
-        report.save();
+        await report.save();
     } catch (error) {
         throw new Error(error);
     }
