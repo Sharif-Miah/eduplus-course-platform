@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { dbConnect } from "@/service/mongo";
 import AuthProvider from "@/components/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
+import AiChatModal from "@/components/ai-chat-modal";
 
 const inter = Inter({ subsets: ["latin"] });
 const poppins = Inter({ subsets: ["latin"], variable: "--font-poppins" });
@@ -33,6 +34,7 @@ export default async function RootLayout({ children }) {
           <AuthProvider>
             {children}
             <Toaster richColors position="top-center" />
+            <AiChatModal />
           </AuthProvider>
         </ThemeProvider>
       </body>
