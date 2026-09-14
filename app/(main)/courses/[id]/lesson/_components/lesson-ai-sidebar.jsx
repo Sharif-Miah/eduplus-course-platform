@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { HelpCircle, BookOpen, MessageSquare, Send, RefreshCw, Check, Copy, ChevronRight, ChevronLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -43,14 +43,25 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
   const currentLessonSlug = searchParams?.get("name") || "";
 
   const messagesEndRef = useRef(null);
+  const scrollContainerRef = useRef(null);
   const inputRef = useRef(null);
-  const abortControllerRef = useRef(null);
+
+  // Smart scroll: only auto-scroll if user is near the bottom
+  const scrollToBottom = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const distanceFromBottom =
+      container.scrollHeight - container.scrollTop - container.clientHeight;
+    if (distanceFromBottom < 120) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, []);
 
   useEffect(() => {
     if (messages.length > 0) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      scrollToBottom();
     }
-  }, [messages, isLoading, isStreaming]);
+  }, [messages, isLoading, isStreaming, scrollToBottom]);
 
   const quickPills = [
     { label: "Clarify core concepts", prompt: `Explain the key fundamental concepts of ${currentLessonSlug || "this lesson"} in ${courseTitle}.` },
@@ -60,44 +71,41 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
 
   const handleSend = async (customPrompt) => {
     const messageToSend = customPrompt || inputValue.trim();
-    if (!messageToSend || isStreaming) return;
+    if (!messageToSend || isStreaming || isLoading) return;
 
     const userMessage = { role: "user", content: messageToSend };
     const updatedHistory = [...messages, userMessage];
 
     setMessages(updatedHistory);
-    if (!customPrompt) {
-      setInputValue("");
-    }
+    if (!customPrompt) setInputValue("");
+
     setIsLoading(true);
-    setIsStreaming(true);
+    setIsStreaming(false);
+
+    // Add empty placeholder immediately so loading dots appear
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
     try {
-      const response = await fetch("/api/ai/chat", {
+      const response = await fetch("/api/ai-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           messages: updatedHistory,
           courseContext: {
             courseTitle,
-            lessonTitle,
-            category: course?.category?.title,
-            description: lesson?.description,
+            lessonTitle: currentLessonSlug,
           },
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to get assistant response");
-      }
+      if (!response.ok) throw new Error("Failed to get assistant response");
 
       setIsLoading(false);
+      setIsStreaming(true);
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let assistantText = "";
-
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       while (true) {
         const { done, value } = await reader.read();
@@ -109,30 +117,28 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
         setMessages((prev) => {
           const newMessages = [...prev];
           const lastIdx = newMessages.length - 1;
-          newMessages[lastIdx] = {
-            role: "assistant",
-            content: assistantText,
-          };
+          newMessages[lastIdx] = { role: "assistant", content: assistantText };
           return newMessages;
         });
+
+        scrollToBottom();
       }
     } catch (err) {
       console.error("Assistant chat error:", err);
       setIsLoading(false);
-      setMessages((prev) => [
-        ...prev,
-        {
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        const lastIdx = newMessages.length - 1;
+        newMessages[lastIdx] = {
           role: "assistant",
-          content:
-            "I apologize, but I encountered an error answering your question. Please make sure your network is connected and try again.",
-        },
-      ]);
+          content: "I apologize, but I encountered an error answering your question. Please make sure your network is connected and try again.",
+        };
+        return newMessages;
+      });
     } finally {
       setIsStreaming(false);
       setIsLoading(false);
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   };
 
@@ -219,7 +225,10 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
       </div>
 
       {/* 2. Messages & Study Notes View */}
-      <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-800 bg-white dark:bg-[#0c101d] transition-colors duration-200">
+      <div
+        ref={scrollContainerRef}
+        className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-800 bg-white dark:bg-[#0c101d] transition-colors duration-200"
+      >
         {messages.length === 0 ? (
           /* Initial State */
           <div className="flex flex-col items-center justify-center h-full text-center px-2 py-4">
@@ -257,7 +266,7 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
               const isLastAssistant = !isUser && index === messages.length - 1;
               const isCurrentStreaming = isLastAssistant && isStreaming;
 
-              if (!isUser && !msg.content && isLoading) {
+              if (!isUser && !msg.content && (isLoading || isStreaming)) {
                 return (
                   <div key={index} className="flex items-start">
                     <div className="bg-slate-100 dark:bg-[#131a2c] border border-slate-200 dark:border-slate-800 rounded-2xl rounded-tl-none px-3 py-2 flex items-center gap-1.5">
