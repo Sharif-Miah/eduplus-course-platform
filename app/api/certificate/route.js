@@ -134,8 +134,8 @@ export async function GET(request) {
         height: logoHeight,
       });
     } catch (err) {
-      console.log("Fallback text for EduConnect logo:", err);
-      const brandText = "EduConnect";
+      console.log("Fallback text for EduPlus logo:", err);
+      const brandText = "EduPlus";
       const brandWidth = montserratBold.widthOfTextAtSize(brandText, 22);
       page.drawText(brandText, {
         x: width / 2 - brandWidth / 2,
@@ -300,8 +300,8 @@ export async function GET(request) {
       color: rgb(0.08, 0.12, 0.22),
     });
 
-    // Signee Title: Founder & Lead Instructor, EduConnect
-    const sigTitle = "Founder & Lead Instructor, EduConnect";
+    // Signee Title: Founder & Lead Instructor, EduPlus
+    const sigTitle = "Founder & Lead Instructor, EduPlus";
     const sigTitleSize = 8.5;
     page.drawText(sigTitle, {
       x: sigX,
@@ -320,7 +320,7 @@ export async function GET(request) {
     return new Response(pdfBytes, {
       headers: {
         "content-type": "application/pdf",
-        "content-disposition": `attachment; filename="EduConnect-Certificate-${courseId || "course"}.pdf"`,
+        "content-disposition": `attachment; filename="EduPlus-Certificate-${courseId || "course"}.pdf"`,
       },
     });
   } catch (error) {

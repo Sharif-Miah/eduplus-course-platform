@@ -1,5 +1,6 @@
 import { CourseSidebarMobile } from "./_components/course-sidebar-mobile";
 import { CourseSidebar } from "./_components/course-sidebar";
+import { LessonAiSidebar } from "./_components/lesson-ai-sidebar";
 import { getLoggedInUser } from "@/lib/loggedin-user";
 import { redirect } from "next/navigation";
 import { hasEnrollmentForCourse } from "@/queries/enrollments";
@@ -26,8 +27,8 @@ const CourseLayout = async ({ children, params }) => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0b1120] flex flex-col transition-colors duration-200">
       {/* Top Sticky Learning Sub-Header */}
-      <div className="bg-slate-950 text-white border-b border-slate-800/80 sticky top-20 z-30 px-4 sm:px-6 py-3.5 shadow-sm">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div className="bg-slate-950 text-white border-b border-slate-800/80 sticky top-20 z-30 px-3 sm:px-5 py-3 shadow-xs">
+        <div className="max-w-[1720px] mx-auto flex items-center justify-between gap-4">
           
           {/* Left: Back Link & Breadcrumbs */}
           <div className="flex items-center gap-3 overflow-hidden">
@@ -65,18 +66,21 @@ const CourseLayout = async ({ children, params }) => {
         </div>
       </div>
 
-      {/* Main Classroom Workspace Grid */}
-      <div className="flex-1 flex flex-col lg:flex-row max-w-7xl w-full mx-auto">
+      {/* Main Classroom 3-Column Card Layout: Separated rounded cards with generous bottom padding */}
+      <div className="flex-1 flex flex-col lg:flex-row max-w-[1720px] w-full mx-auto gap-4 xl:gap-5 p-3 sm:p-5 lg:p-6 pb-24 lg:pb-32 items-start justify-center">
         
-        {/* Left: Sticky Desktop Sidebar (380px) */}
-        <aside className="hidden lg:block w-96 flex-shrink-0 border-r border-slate-200/80 dark:border-slate-800 bg-white dark:bg-[#0b1120] min-h-[calc(100vh-130px)] sticky top-[133px] max-h-[calc(100vh-133px)] overflow-y-auto transition-colors">
+        {/* 1. Left: Curved Curriculum Card (~290px - 300px) */}
+        <aside className="hidden lg:flex flex-col w-72 xl:w-[295px] flex-shrink-0 rounded-3xl border border-slate-200/80 dark:border-slate-800/90 bg-white dark:bg-[#0c101d] shadow-2xl overflow-hidden sticky top-[133px] h-[calc(100vh-170px)] min-h-[620px] max-h-[820px] transition-all">
           <CourseSidebar courseId={id} />
         </aside>
 
-        {/* Right: Main Video & Interactive Lesson Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 min-w-0">
+        {/* 2. Middle: Balanced Video Player & Lesson Details (Max ~820px - 840px) */}
+        <main className="flex-1 min-w-0 max-w-[800px] xl:max-w-[840px] w-full">
           {children}
         </main>
+
+        {/* 3. Right: Wider Embedded AI Chat Card (~380px - 410px) */}
+        <LessonAiSidebar courseTitle={course?.title || "Course"} />
 
       </div>
     </div>

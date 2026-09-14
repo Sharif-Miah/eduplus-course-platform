@@ -42,35 +42,36 @@ export const DownloadCertificate = ({ courseId, totalProgress }) => {
     <button
       onClick={handleCertificateDownload}
       disabled={isCertificateDownloading}
+      title={isUnlocked ? "Download official certificate" : "Complete 100% of the course to unlock certificate"}
       className={cn(
-        "w-full rounded-2xl py-3 px-4 text-xs font-bold transition-all duration-200 flex items-center justify-between shadow-xs cursor-pointer",
+        "w-full rounded-2xl py-2.5 px-3 sm:px-3.5 text-xs font-bold transition-all duration-200 flex items-center justify-between shadow-xs cursor-pointer overflow-hidden",
         isUnlocked
           ? "bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98]"
           : "bg-slate-100 dark:bg-slate-800/80 hover:bg-slate-200/80 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 border border-slate-200/60 dark:border-slate-700"
       )}
     >
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
         <div
           className={cn(
-            "w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0",
+            "w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0",
             isUnlocked ? "bg-white/20 text-white" : "bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
           )}
         >
           {isCertificateDownloading ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
           ) : isUnlocked ? (
-            <Award className="w-4 h-4" />
+            <Award className="w-3.5 h-3.5" />
           ) : (
             <Lock className="w-3.5 h-3.5" />
           )}
         </div>
-        <span className="truncate">
-          {isUnlocked ? "Download Official Certificate" : "Certificate Locked (100% required)"}
+        <span className="truncate text-[11px] sm:text-xs font-bold">
+          {isUnlocked ? "Download Certificate" : "Certificate Locked (100%)"}
         </span>
       </div>
 
       {isUnlocked && (
-        <Download className="w-4 h-4 text-white flex-shrink-0" />
+        <Download className="w-3.5 h-3.5 text-white flex-shrink-0 ml-1.5" />
       )}
     </button>
   );

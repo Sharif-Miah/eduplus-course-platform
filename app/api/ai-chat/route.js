@@ -17,13 +17,13 @@ export async function POST(request) {
       let fallbackText = "";
 
       if (lastUserMsg.includes("certificate")) {
-        fallbackText = "🎓 **EduConnect Certificate Help:**\nTo unlock and download your course certificate, you must complete **100% of the lessons** in the course. Each video lesson unlocks sequentially. Once all lessons are done, the **Download Certificate** button in the sidebar and completion banner will be enabled!";
+        fallbackText = "🎓 **EduPlus Certificate Help:**\nTo unlock and download your course certificate, you must complete **100% of the lessons** in the course. Each video lesson unlocks sequentially. Once all lessons are done, the **Download Certificate** button in the sidebar and completion banner will be enabled!";
       } else if (lastUserMsg.includes("unlock") || lastUserMsg.includes("lesson")) {
-        fallbackText = "🔓 **Sequential Lesson Progression:**\nLessons in EduConnect unlock one after another. When you finish watching the current lesson video or click *Complete & Unlock Next Lesson*, the next lesson will automatically unlock!";
+        fallbackText = "🔓 **Sequential Lesson Progression:**\nLessons in EduPlus unlock one after another. When you finish watching the current lesson video or click *Complete & Unlock Next Lesson*, the next lesson will automatically unlock!";
       } else if (lastUserMsg.includes("python")) {
-        fallbackText = "🐍 **Python Learning Support:**\nPython is a versatile programming language! In EduConnect's Python Masterclass, you learn variables, data types, loops, functions, OOP, and practical real-world exercises.";
+        fallbackText = "🐍 **Python Learning Support:**\nPython is a versatile programming language! In EduPlus's Python Masterclass, you learn variables, data types, loops, functions, OOP, and practical real-world exercises.";
       } else {
-        fallbackText = "👋 Hello! I am the **EduConnect AI Assistant**.\n\nTo activate full live Gemini AI conversational powers, please add your free **Google Gemini API Key** to your project `.env` file:\n\n```env\nGEMINI_API_KEY=your_actual_gemini_api_key\n```\n\n📌 *You can get a 100% FREE Gemini API Key from Google AI Studio at: [aistudio.google.com](https://aistudio.google.com/)*\n\nFeel free to ask me anything about EduConnect courses, certificates, or lessons!";
+        fallbackText = "👋 Hello! I am the **EduPlus AI Assistant**.\n\nTo activate full live Gemini AI conversational powers, please add your free **Google Gemini API Key** to your project `.env` file:\n\n```env\nGEMINI_API_KEY=your_actual_gemini_api_key\n```\n\n📌 *You can get a 100% FREE Gemini API Key from Google AI Studio at: [aistudio.google.com](https://aistudio.google.com/)*\n\nFeel free to ask me anything about EduPlus courses, certificates, or lessons!";
       }
 
       // Stream fallback text word-by-word
@@ -53,12 +53,12 @@ export async function POST(request) {
       parts: [{ text: m.content || "" }],
     }));
 
-    const systemPrompt = `You are EduConnect AI, an intelligent, inspiring, and friendly learning assistant for the EduConnect online education platform (founded by Sharif Miah).
+    const systemPrompt = `You are EduPlus AI, an intelligent, inspiring, and friendly learning assistant for the EduPlus online education platform (founded by Sharif Miah).
 Your mission is to:
 1. Help students understand programming, web development, data structures, and course topics clearly with concise, practical code examples.
-2. Guide users on EduConnect platform features: courses, quizzes, sequential lesson video watching, and getting verified certificates upon 100% completion.
+2. Guide users on EduPlus platform features: courses, quizzes, sequential lesson video watching, and getting verified certificates upon 100% completion.
 3. Be friendly, polite, encouraging, and format your responses with clean Markdown (bold text, bullet points, and code blocks).
-4. If asked who you are, introduce yourself as the EduConnect AI Assistant.`;
+4. If asked who you are, introduce yourself as the EduPlus AI Assistant.`;
 
     const candidateModels = [
       "gemini-3.6-flash",

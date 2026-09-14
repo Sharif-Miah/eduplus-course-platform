@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Brain, MessageCircle, Send, X, Sparkles, RefreshCw, Check, Copy } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 // Format simple markdown into clean HTML
@@ -45,6 +46,9 @@ export default function AiChatModal() {
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState(null);
+
+  const pathname = usePathname();
+  const isLessonPage = pathname?.includes("/lesson");
 
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
@@ -182,7 +186,7 @@ export default function AiChatModal() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+    <div className={cn("fixed bottom-6 right-6 z-50 flex flex-col items-end", isLessonPage && "xl:hidden")}>
       {/* 1. Floating Trigger Button (Matching Project Brand Color #4A3AFF) */}
       {!isOpen && (
         <div className="group relative flex items-center cursor-pointer">
@@ -266,7 +270,7 @@ export default function AiChatModal() {
 
                 {/* Subtitle */}
                 <p className="text-xs text-slate-400 mb-6 leading-relaxed max-w-[280px]">
-                  Ask me anything about your courses, lessons, code, or certificates on EduConnect.
+                  Ask me anything about your courses, lessons, code, or certificates on EduPlus.
                 </p>
 
                 {/* Prompt Suggestions */}
@@ -304,7 +308,7 @@ export default function AiChatModal() {
                             <span className="w-2 h-2 rounded-full bg-[#4A3AFF] animate-bounce" style={{ animationDelay: "300ms" }} />
                           </div>
                           <span className="text-xs text-slate-400 font-medium ml-1">
-                            EduConnect AI is thinking...
+                            EduPlus AI is thinking...
                           </span>
                         </div>
                       </div>

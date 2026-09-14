@@ -108,14 +108,14 @@ export const CourseSidebar = async ({ courseId }) => {
       </div>
 
       {/* 3. Bottom Actions & Special Cards */}
-      <div className="p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-4">
+      <div className="p-4 sm:p-4.5 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 space-y-3">
         {quizSet && (
           <div className="w-full">
             <Quiz courseId={courseId} quizSet={quizSet} isTaken={isQuizComplete} />
           </div>
         )}
 
-        <div className="space-y-2.5">
+        <div className="space-y-2">
           <DownloadCertificate courseId={courseId} totalProgress={totalProgress} />
           <GiveReview courseId={courseId} />
         </div>
