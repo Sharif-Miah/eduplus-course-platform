@@ -93,13 +93,13 @@ export default function DocsPage() {
       <section className="border-b bg-muted/40 py-10 md:py-14 grainy">
         <div className="container max-w-6xl mx-auto px-4 text-center">
           <Badge variant="outline" className="bg-background/80 mb-3 px-3 py-1 font-semibold">
-            EduConnect Knowledge Base & Guides
+            EduPlus Knowledge Base & Guides
           </Badge>
           <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground font-heading">
             Documentation & User Guides
           </h1>
           <p className="mt-3 text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to know about learning, teaching, taking quizzes, and earning certificates on EduConnect.
+            Everything you need to know about learning, teaching, taking quizzes, and earning certificates on EduPlus.
           </p>
 
           {/* Search Bar */}
@@ -182,7 +182,7 @@ export default function DocsPage() {
                   Platform Overview
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  Welcome to <strong>EduConnect</strong>, the next-generation e-learning platform built for modern programmers, designers, and tech professionals. EduConnect combines high-definition video lessons, interactive quizzes, automated progress tracking, verified certificates, and a full-featured instructor management system.
+                  Welcome to <strong>EduPlus</strong>, the next-generation e-learning platform built for modern programmers, designers, and tech professionals. EduPlus combines high-definition video lessons, interactive quizzes, automated progress tracking, verified certificates, and a full-featured instructor management system.
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
@@ -225,7 +225,7 @@ export default function DocsPage() {
                   Creating an Account (Student vs. Instructor)
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  EduConnect supports two specialized account roles tailored to different user journeys:
+                  EduPlus supports two specialized account roles tailored to different user journeys:
                 </p>
 
                 <div className="space-y-4">
@@ -349,7 +349,7 @@ export default function DocsPage() {
                   Tracking Your Course Progress
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  EduConnect automatically tracks completed lessons, watched durations, and quiz submissions.
+                  EduPlus automatically tracks completed lessons, watched durations, and quiz submissions.
                 </p>
                 <div className="rounded-2xl border p-6 bg-slate-900 text-white font-mono text-xs space-y-2">
                   <p className="text-emerald-400">{"// Progress Calculation Algorithm"}</p>
@@ -483,7 +483,7 @@ export default function DocsPage() {
                   Secure Checkout & Pricing
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  All transactions on EduConnect are processed securely via Stripe. We do not store your credit card information on our servers.
+                  All transactions on EduPlus are processed securely via Stripe. We do not store your credit card information on our servers.
                 </p>
                 <div className="rounded-xl border p-4 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-900 dark:text-emerald-300 text-xs md:text-sm">
                   ✓ 256-bit SSL encryption <br />
@@ -533,7 +533,7 @@ export default function DocsPage() {
                   Certificate QR & Verification System
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  Every certificate issued by EduConnect carries a unique cryptographic ID and public verification URL:
+                  Every certificate issued by EduPlus carries a unique cryptographic ID and public verification URL:
                 </p>
                 <div className="rounded-xl border p-4 bg-slate-900 text-slate-100 font-mono text-xs">
                   https://educonnect.com/api/certificate?reportId=...
@@ -554,7 +554,7 @@ export default function DocsPage() {
                   Platform Architecture & Tech Stack
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground leading-relaxed">
-                  EduConnect is engineered using industry-grade modern fullstack standards:
+                  EduPlus is engineered using industry-grade modern fullstack standards:
                 </p>
                 <div className="space-y-2 text-xs md:text-sm text-muted-foreground">
                   <p>• <strong>Framework:</strong> Next.js 14+ (App Router, Server Components & Server Actions)</p>

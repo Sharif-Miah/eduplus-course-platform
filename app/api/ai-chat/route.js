@@ -23,7 +23,7 @@ export async function POST(request) {
       } else if (lastUserMsg.includes("python")) {
         fallbackText = "🐍 **Python Learning Support:**\nPython is a versatile programming language! In EduPlus's Python Masterclass, you learn variables, data types, loops, functions, OOP, and practical real-world exercises.";
       } else {
-        fallbackText = "👋 Hello! I am the **EduPlus AI Assistant**.\n\nTo activate full live Gemini AI conversational powers, please add your free **Google Gemini API Key** to your project `.env` file:\n\n```env\nGEMINI_API_KEY=your_actual_gemini_api_key\n```\n\n📌 *You can get a 100% FREE Gemini API Key from Google AI Studio at: [aistudio.google.com](https://aistudio.google.com/)*\n\nFeel free to ask me anything about EduPlus courses, certificates, or lessons!";
+        fallbackText = "Hello! I am your **EduPlus Course Assistant**.\n\nTo activate full conversational assistance, please ensure your free **Google Gemini API Key** is configured in your project environment.\n\nFeel free to ask me anything about EduPlus courses, certificates, or lessons!";
       }
 
       // Stream fallback text word-by-word

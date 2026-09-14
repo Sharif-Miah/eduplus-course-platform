@@ -46,7 +46,7 @@ export const Navbar = () => {
             <span>Instructor Portal</span>
           </span>
           <span className="text-slate-300 dark:text-slate-700">•</span>
-          <span>EduConnect Management</span>
+          <span>EduPlus Management</span>
         </div>
       </div>
 

@@ -179,7 +179,7 @@ export default function SiteFooter({ className }) {
             <Logo />
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 font-normal">
-            Copyright 2026 All Rights Reserved Edplus
+            Copyright 2026 All Rights Reserved EduPlus
           </p>
         </div>
 

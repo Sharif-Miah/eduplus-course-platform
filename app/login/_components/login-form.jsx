@@ -6,12 +6,13 @@ import { Label } from "@/components/ui/label";
 import { ceredntialLogin, doSocialLogin } from "@/app/actions";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Lock, BookOpen, ArrowRight, Loader2, AlertCircle } from "lucide-react";
+import { Mail, Lock, BookOpen, ArrowRight, Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import Image from "next/image";
 
 export function LoginForm() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams?.get("callbackUrl") || "/courses";
@@ -93,34 +94,46 @@ export function LoginForm() {
         {/* Credentials Form */}
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <Label className="text-xs font-bold text-slate-700">Email Address</Label>
+            <Label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+              Email Address <span className="text-rose-500">*</span>
+            </Label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 id="email"
                 name="email"
                 type="email"
                 placeholder="name@example.com"
                 required
-                className="w-full bg-slate-50/70 border border-slate-200/90 rounded-2xl py-3 pl-10 pr-4 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#4A3AFF]/30 focus:border-[#4A3AFF] transition-all"
+                className="w-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl py-3 pl-11 pr-4 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 placeholder:font-normal focus:outline-none focus:border-[#4A3AFF] focus:ring-4 focus:ring-[#4A3AFF]/15 transition-all shadow-xs"
               />
             </div>
           </div>
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <Label className="text-xs font-bold text-slate-700">Password</Label>
+              <Label className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+                Password <span className="text-rose-500">*</span>
+              </Label>
             </div>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="••••••••"
                 required
-                className="w-full bg-slate-50/70 border border-slate-200/90 rounded-2xl py-3 pl-10 pr-4 text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#4A3AFF]/30 focus:border-[#4A3AFF] transition-all"
+                className="w-full bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600 rounded-2xl py-3 pl-11 pr-11 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 placeholder:font-normal focus:outline-none focus:border-[#4A3AFF] focus:ring-4 focus:ring-[#4A3AFF]/15 transition-all shadow-xs"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer p-1"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 

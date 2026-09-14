@@ -14,7 +14,7 @@ import {
   Radio, 
   HelpCircle, 
   TrendingUp, 
-  Sparkles,
+  GraduationCap,
   ArrowRight,
   ShieldCheck,
   Award
@@ -50,12 +50,12 @@ const DashboardPage = async () => {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 bg-[#4A3AFF]/20 border border-[#4A3AFF]/40 px-3 py-1 rounded-full text-xs font-bold text-indigo-300">
-              <Sparkles className="w-3.5 h-3.5" />
+              <GraduationCap className="w-3.5 h-3.5" />
               <span>Instructor Command Center</span>
             </div>
             
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-              Welcome back, {fullName}! 👋
+              Welcome back, {fullName}!
             </h1>
 
             <p className="text-xs sm:text-sm text-slate-300 max-w-xl leading-relaxed font-medium">
