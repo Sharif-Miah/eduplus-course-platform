@@ -11,7 +11,6 @@ import HowItWorksAndTestimonials from "@/components/home/HowItWorksAndTestimonia
 import InstructorsAndPartners from "@/components/home/InstructorsAndPartners";
 import LatestNewsSection from "@/components/home/LatestNewsSection";
 import CtaBanners from "@/components/home/CtaBanners";
-import ScrollToTop from "@/components/home/ScrollToTop";
 
 const HomePage = async () => {
     let courses = [];
@@ -52,9 +51,6 @@ const HomePage = async () => {
 
             {/* 8. Call To Action Promo Banners (Get Free Courses & Become a Tutor) */}
             <CtaBanners />
-
-            {/* Scroll To Top Button */}
-            <ScrollToTop />
         </div>
     );
 };
