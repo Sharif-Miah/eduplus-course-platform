@@ -1,130 +1,54 @@
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel";
-import { SectionTitle } from "@/components/section-title";
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
-import { BookOpen } from "lucide-react";
-import { formatPrice } from "@/lib/formatPrice";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { BookOpen, Sparkles, ArrowRight, Layers } from "lucide-react";
+import CourseCard from "@/app/(main)/courses/_components/CourseCard";
 
-const courses = [
-    {
-        id: 1,
-        title: "Design",
-        thumbnail: "/assets/images/categories/design.jpg",
-    },
+const RelatedCourses = ({ courses = [] }) => {
+  if (!courses || courses.length === 0) {
+    return null;
+  }
 
-    {
-        id: 3,
-        title: "Development",
-        thumbnail: "/assets/images/categories/development.jpg",
-    },
-    {
-        id: 4,
-        title: "Marketing",
-        thumbnail: "/assets/images/categories/marketing.jpg",
-    },
-    {
-        id: 5,
-        title: "IT & Software",
-        thumbnail: "/assets/images/categories/it_software.jpg",
-    },
-    {
-        id: 6,
-        title: "Personal Development",
-        thumbnail: "/assets/images/categories/personal_development.jpg",
-    },
-    {
-        id: 7,
-        title: "Business",
-        thumbnail: "/assets/images/categories/business.jpg",
-    },
-    {
-        id: 8,
-        title: "Photography",
-        thumbnail: "/assets/images/categories/photography.jpg",
-    },
-    {
-        id: 9,
-        title: "Music",
-        thumbnail: "/assets/images/categories/music.jpg",
-    },
-];
+  return (
+    <section className="py-16 bg-slate-50 dark:bg-slate-900/40 border-t border-slate-100 dark:border-slate-800 transition-colors">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6">
+        
+        {/* Section Title Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+          <div className="space-y-2">
+            <span className="inline-flex items-center gap-1.5 bg-[#4A3AFF]/10 text-[#4A3AFF] text-xs font-black uppercase tracking-wider px-3 py-1 rounded-full">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Recommended For You</span>
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              Related Courses
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 max-w-xl">
+              Expand your tech skills further with these top-rated, hands-on programming courses.
+            </p>
+          </div>
 
-const RelatedCourses = () => {
-    return (
-        <section className="">
-            <div className="container">
-                <SectionTitle className="mb-6">Related Courses</SectionTitle>
-                <Carousel
-                    opts={{
-                        align: "start",
-                    }}
-                    className="max-2xl:w-[90%] w-full mx-auto"
-                >
-                    <CarouselPrevious />
-                    <CarouselNext />
-                    <CarouselContent>
-                        {courses.map((course) => (
-                            <CarouselItem
-                                key={course.id}
-                                className="md:basis-1/2 lg:basis-1/3"
-                            >
-                                <Link href={`/courses/${course.id}`}>
-                                    <div className="group hover:shadow-sm transition overflow-hidden border rounded-lg p-3 h-full">
-                                        <div className="relative w-full aspect-video rounded-md overflow-hidden">
-                                            <Image
-                                                src="/assets/images/courses/course_1.png"
-                                                alt={"course"}
-                                                className="object-cover"
-                                                fill
-                                            />
-                                        </div>
-                                        <div className="flex flex-col pt-2">
-                                            <div className="text-lg md:text-base font-medium group-hover:text-sky-700 line-clamp-2">
-                                                Reactive Accelerator
-                                            </div>
-                                            <p className="text-xs text-muted-foreground">
-                                                Development
-                                            </p>
-                                            <div className="my-3 flex items-center gap-x-2 text-sm md:text-xs">
-                                                <div className="flex items-center gap-x-1 text-slate-500">
-                                                    <div>
-                                                        <BookOpen className="w-4" />
-                                                    </div>
-                                                    <span>4 Chapters</span>
-                                                </div>
-                                            </div>
+          <Link
+            href="/courses"
+            className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-[#4A3AFF] hover:text-[#3D2FE6] transition-colors group flex-shrink-0"
+          >
+            <span>Browse All Courses</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        </div>
 
-                                            <div className="flex items-center justify-between mt-4">
-                                                <p className="text-md md:text-sm font-medium text-slate-700">
-                                                    {formatPrice(49)}
-                                                </p>
+        {/* Responsive Grid of Course Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          {courses.slice(0, 3).map((course) => (
+            <CourseCard key={course.id || course._id} course={course} />
+          ))}
+        </div>
 
-                                                <Button
-                                                    variant="ghost"
-                                                    className="text-xs text-sky-700 h-7 gap-1"
-                                                >
-                                                    Enroll
-                                                    <ArrowRight className="w-3" />
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                </Carousel>
-            </div>
-        </section>
-    );
+      </div>
+    </section>
+  );
 };
 
 export default RelatedCourses;
+

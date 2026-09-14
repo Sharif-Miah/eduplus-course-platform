@@ -28,8 +28,8 @@ const CourseLessonList = async ({ lessonId }) => {
       </div>
 
       <div className="flex items-center gap-3">
-        {lesson?.is_free ? (
-          <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-0.5 rounded-md border border-emerald-200">
+        {(lesson?.access === "public" || lesson?.is_free) ? (
+          <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-200">
             Preview
           </span>
         ) : (

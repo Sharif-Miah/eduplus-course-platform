@@ -1,49 +1,44 @@
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion";
-
-import { Radio } from "lucide-react";
-import { Video } from "lucide-react";
-import { NotepadText } from "lucide-react";
-import { FileQuestion } from "lucide-react";
-import { PlayCircle } from "lucide-react";
-import { SquarePlay } from "lucide-react";
-import { StickyNote } from "lucide-react";
-import { Tv } from "lucide-react";
-import { cn } from "@/lib/utils";
-
+import { Video, Clock, BookOpen } from "lucide-react";
 import CourseLessonList from "./CourseLessonList";
 
-const CourseModuleList = ({module}) => {
-    const totalDuration = module?.lessonIds.reduce(function (acc, obj) { return acc + obj.duration; }, 0);
+const CourseModuleList = ({ module }) => {
+  const lessonList = module?.lessonIds || [];
+  const totalDuration = lessonList.reduce((acc, obj) => acc + (obj?.duration || 0), 0);
+  const formattedDuration = totalDuration > 0 ? `${Math.round(totalDuration / 60)} Mins` : "Self-paced";
 
-    return (
-        <AccordionItem className="border-none" value="item-1">
-            <AccordionTrigger>{module?.title}</AccordionTrigger>
-            <AccordionContent>
-                {/* header */}
-                <div className="flex gap-x-5 items-center flex-wrap mt-4 mb-6 text-gray-600 text-sm">
-                    <span className="flex items-center gap-1.5">
-                        <Video className="w-4 h-4" />
-                        {(totalDuration/3660).toPrecision(2)} Hours
-                    </span>
-                </div>
-                {/* header ends */}
+  return (
+    <div className="pt-2 pb-1 space-y-3">
+      {/* Module description and duration badge */}
+      <div className="flex items-center justify-between flex-wrap gap-2 pb-2 text-xs font-medium text-slate-500 border-b border-slate-100">
+        {module?.description && (
+          <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-xs">
+            {module.description}
+          </p>
+        )}
+        <div className="flex items-center gap-3 text-[11px] font-semibold text-slate-400">
+          <span className="flex items-center gap-1">
+            <BookOpen className="w-3.5 h-3.5 text-[#4A3AFF]" />
+            <span>{lessonList.length} Lessons</span>
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5 text-[#4A3AFF]" />
+            <span>{formattedDuration}</span>
+          </span>
+        </div>
+      </div>
 
-                <div className="space-y-3">
-                    {
-                        module?.lessonIds && module?.lessonIds.map(lessonId => (
-                            <CourseLessonList key={lessonId?._id?.toString() || lessonId?.id || lessonId} lessonId={lessonId} />
-                        ))
-                    }
-
-                </div>
-            </AccordionContent>
-        </AccordionItem>
-    );
+      {/* Lessons list */}
+      <div className="space-y-2 pt-1">
+        {lessonList.map((lessonId) => (
+          <CourseLessonList
+            key={lessonId?._id?.toString() || lessonId?.id || lessonId}
+            lessonId={lessonId}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default CourseModuleList;
+
