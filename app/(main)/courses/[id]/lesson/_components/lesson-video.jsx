@@ -174,7 +174,7 @@ export const LessonVideo = ({ courseId, lesson, module }) => {
         <div>
           {isCompleted ? (
             <span className="text-[11px] text-slate-400 font-medium flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
               <span>Next lesson is unlocked</span>
             </span>
           ) : (

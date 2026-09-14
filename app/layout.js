@@ -7,6 +7,8 @@ import AuthProvider from "@/components/auth-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import AiChatModal from "@/components/ai-chat-modal";
 
+import { auth } from "@/auth";
+
 const inter = Inter({ subsets: ["latin"] });
 const poppins = Inter({ subsets: ["latin"], variable: "--font-poppins" });
 
@@ -22,6 +24,7 @@ export const metadata = {
 
 export default async function RootLayout({ children }) {
   await dbConnect();
+  const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.className, poppins.className, "bg-[#ffffff] dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 transition-colors duration-200")}>
@@ -31,7 +34,7 @@ export default async function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
+          <AuthProvider session={session}>
             {children}
             <Toaster richColors position="top-center" />
             <AiChatModal />

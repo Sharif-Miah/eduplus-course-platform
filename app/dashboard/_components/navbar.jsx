@@ -13,7 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { signOut } from "next-auth/react";
-import { User, LogOut, Sparkles, ExternalLink } from "lucide-react";
+import { User, LogOut, GraduationCap, ExternalLink } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Navbar = () => {
@@ -42,7 +42,7 @@ export const Navbar = () => {
         <MobileSidebar />
         <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400">
           <span className="bg-[#4A3AFF]/10 text-[#4A3AFF] px-2.5 py-1 rounded-full flex items-center gap-1 font-bold">
-            <Sparkles className="w-3 h-3 text-[#4A3AFF]" />
+            <GraduationCap className="w-3.5 h-3.5 text-[#4A3AFF]" />
             <span>Instructor Portal</span>
           </span>
           <span className="text-slate-300 dark:text-slate-700">•</span>
@@ -104,7 +104,7 @@ export const Navbar = () => {
                 } catch (err) {
                   console.error("SignOut error:", err);
                 } finally {
-                  window.location.href = "/";
+                  window.location.href = "/api/auth/logout";
                 }
               }}
               onClick={async (e) => {
@@ -114,7 +114,7 @@ export const Navbar = () => {
                 } catch (err) {
                   console.error("SignOut error:", err);
                 } finally {
-                  window.location.href = "/";
+                  window.location.href = "/api/auth/logout";
                 }
               }}
             >

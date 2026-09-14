@@ -1,4 +1,5 @@
 export const authConfig = {
+    basePath: "/api/auth",
     session: {
         strategy: 'jwt',
     },

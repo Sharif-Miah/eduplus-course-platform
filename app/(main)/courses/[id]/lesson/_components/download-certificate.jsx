@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { Award, Download, Loader2, Lock, Sparkles } from "lucide-react";
+import { Award, Download, Loader2, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const DownloadCertificate = ({ courseId, totalProgress }) => {

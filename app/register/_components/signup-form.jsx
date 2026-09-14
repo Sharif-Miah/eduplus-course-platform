@@ -95,7 +95,7 @@ export function SignupForm({ role }) {
 
           <div className="pt-2">
             <div className="inline-flex items-center gap-1.5 bg-[#4A3AFF]/10 text-[#4A3AFF] px-3 py-0.5 rounded-full text-xs font-bold mb-2">
-              <Sparkles className="w-3 h-3" />
+              <GraduationCap className="w-3.5 h-3.5" />
               <span>Join EduPlus Community</span>
             </div>
             

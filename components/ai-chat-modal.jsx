@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Brain, MessageCircle, Send, X, Sparkles, RefreshCw, Check, Copy } from "lucide-react";
+import { HelpCircle, MessageCircle, Send, X, RefreshCw, Check, Copy } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -40,20 +40,19 @@ function formatMarkdown(text) {
 }
 
 export default function AiChatModal() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [copiedIndex, setCopiedIndex] = useState(null);
-
   const pathname = usePathname();
   const isLessonPage = pathname?.includes("/lesson");
 
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [copiedIndex, setCopiedIndex] = useState(null);
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
-  const abortControllerRef = useRef(null);
 
+  // Auto-scroll to bottom of messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -61,104 +60,107 @@ export default function AiChatModal() {
   useEffect(() => {
     if (isOpen) {
       scrollToBottom();
-      setTimeout(() => inputRef.current?.focus(), 150);
     }
-  }, [isOpen, messages, isLoading, isStreaming]);
+  }, [messages, isStreaming, isOpen]);
 
+  // Focus input on modal open
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 150);
+    }
+  }, [isOpen]);
+
+  // Helpful starter prompts
   const defaultPrompts = [
-    { text: "How do I download my course certificate?", icon: "🎓" },
-    { text: "What programming courses are available?", icon: "💻" },
-    { text: "Explain how sequential lesson unlocking works", icon: "🔓" },
-    { text: "Help me write a Python script", icon: "🐍" },
+    {
+      text: "How do I earn and download my course certificate?",
+      icon: "🎓",
+    },
+    {
+      text: "Which course is best for full-stack web development?",
+      icon: "💻",
+    },
+    {
+      text: "How does sequential lesson unlocking work?",
+      icon: "🔓",
+    },
   ];
 
-  const handleSend = async (customPrompt) => {
-    const textToSend = typeof customPrompt === "string" ? customPrompt : inputValue;
-    if (!textToSend.trim() || isLoading || isStreaming) return;
+  const handleSend = async (customText) => {
+    const textToSend = customText || inputValue.trim();
+    if (!textToSend || isStreaming) return;
 
-    const userMessage = { role: "user", content: textToSend.trim() };
+    const userMessage = { role: "user", content: textToSend };
     const updatedMessages = [...messages, userMessage];
 
-    setMessages([...updatedMessages, { role: "assistant", content: "" }]);
-    setInputValue("");
-    setIsLoading(true);
+    setMessages(updatedMessages);
+    if (!customText) {
+      setInputValue("");
+    }
     setIsStreaming(true);
 
-    abortControllerRef.current = new AbortController();
-
     try {
-      const response = await fetch("/api/ai-chat", {
+      const response = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: updatedMessages }),
-        signal: abortControllerRef.current.signal,
+        body: JSON.stringify({
+          messages: updatedMessages,
+          courseContext: {
+            currentPage: pathname,
+          },
+        }),
       });
 
-      if (!response.ok || !response.body) {
-        throw new Error(`Server returned ${response.status}`);
+      if (!response.ok) {
+        throw new Error("Failed to get assistant response");
       }
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      let accumulatedText = "";
-      let firstChunkReceived = false;
+      let assistantText = "";
+
+      // Add placeholder for streaming assistant response
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       while (true) {
-        const { value, done } = await reader.read();
+        const { done, value } = await reader.read();
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        accumulatedText += chunk;
-
-        if (!firstChunkReceived) {
-          firstChunkReceived = true;
-          setIsLoading(false);
-        }
+        assistantText += chunk;
 
         setMessages((prev) => {
-          const next = [...prev];
-          const lastIdx = next.length - 1;
-          if (lastIdx >= 0 && next[lastIdx].role === "assistant") {
-            next[lastIdx] = {
-              ...next[lastIdx],
-              content: accumulatedText,
-            };
-          }
-          return next;
+          const newMessages = [...prev];
+          const lastIdx = newMessages.length - 1;
+          newMessages[lastIdx] = {
+            role: "assistant",
+            content: assistantText,
+          };
+          return newMessages;
         });
       }
-    } catch (err) {
-      if (err.name === "AbortError") {
-        console.log("Stream aborted by user");
-      } else {
-        console.error("AI chat error:", err);
-        setMessages((prev) => {
-          const next = [...prev];
-          const lastIdx = next.length - 1;
-          if (lastIdx >= 0 && next[lastIdx].role === "assistant") {
-            next[lastIdx] = {
-              ...next[lastIdx],
-              content:
-                next[lastIdx].content ||
-                "Sorry, I encountered an issue generating an answer. Please check your Gemini API key in `.env` and try again.",
-            };
-          }
-          return next;
-        });
-      }
+    } catch (error) {
+      console.error("Chat error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content:
+            "I apologize, but I encountered an error answering your question. Please make sure your network is connected and try again.",
+        },
+      ]);
     } finally {
-      setIsLoading(false);
       setIsStreaming(false);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     }
   };
 
   const handleClearChat = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
     setMessages([]);
-    setIsLoading(false);
-    setIsStreaming(false);
   };
 
   const handleCopy = (text, idx) => {
@@ -169,7 +171,7 @@ export default function AiChatModal() {
 
   return (
     <div className={cn("fixed bottom-6 right-6 z-50 flex flex-col items-end", isLessonPage && "xl:hidden")}>
-      {/* 1. Floating Trigger Button (Matching Project Brand Color #4A3AFF) */}
+      {/* 1. Floating Trigger Button */}
       {!isOpen && (
         <div className="group relative flex items-center cursor-pointer">
           {/* Subtle Project-themed Pill Badge */}
@@ -177,14 +179,14 @@ export default function AiChatModal() {
             onClick={() => setIsOpen(true)}
             className="hidden sm:flex items-center gap-1.5 px-3.5 py-2 -mr-3.5 pr-6 rounded-l-full bg-[#3D2FE6]/90 hover:bg-[#3D2FE6] text-white text-xs font-bold shadow-lg border-y border-l border-indigo-400/30 transition-all duration-300 group-hover:pr-7 select-none"
           >
-            <Sparkles className="w-3.5 h-3.5 text-indigo-200 animate-pulse" />
-            <span>Ask AI</span>
+            <HelpCircle className="w-3.5 h-3.5 text-indigo-200" />
+            <span>Need Help?</span>
           </div>
 
           {/* Floating Circle Button */}
           <button
             onClick={() => setIsOpen(true)}
-            aria-label="Open AI Assistant"
+            aria-label="Open Course Support"
             className="relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-tr from-[#4A3AFF] to-[#6366f1] text-white shadow-[0_0_25px_rgba(74,58,255,0.45)] hover:shadow-[0_0_35px_rgba(74,58,255,0.7)] hover:scale-105 active:scale-95 transition-all duration-300 z-10 border border-indigo-400/40 cursor-pointer"
           >
             {/* Ambient Indigo Glow Pulse */}
@@ -202,14 +204,14 @@ export default function AiChatModal() {
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3.5 bg-slate-50/90 dark:bg-[#0e1424] border-b border-slate-200 dark:border-slate-800/90 transition-colors">
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-tr from-[#4A3AFF] to-[#6366f1] text-white shadow-md shadow-indigo-500/25">
-                <Brain className="w-5 h-5" />
+              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#4A3AFF] text-white shadow-md shadow-indigo-500/25">
+                <HelpCircle className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
-                  Ask AI
+                  Course Support
                   <span className="text-[10px] uppercase font-semibold px-2 py-0.5 bg-[#4A3AFF]/15 text-[#4A3AFF] dark:text-indigo-300 border border-[#4A3AFF]/30 rounded-full">
-                    Gemini Live
+                    Online
                   </span>
                 </h3>
               </div>
@@ -240,19 +242,18 @@ export default function AiChatModal() {
             {messages.length === 0 ? (
               /* Initial Welcome State */
               <div className="flex flex-col items-center justify-center h-full text-center px-3 py-6">
-                {/* Large Center Brain Icon with Project Indigo Accent */}
                 <div className="w-16 h-16 rounded-full bg-indigo-50 dark:bg-[#141b2f] border border-[#4A3AFF]/30 flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(74,58,255,0.15)]">
-                  <Brain className="w-9 h-9 text-[#4A3AFF] dark:text-indigo-400" />
+                  <HelpCircle className="w-8 h-8 text-[#4A3AFF] dark:text-indigo-400" />
                 </div>
 
                 {/* Heading */}
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
-                  How can I help you today?
+                  How can we help you today?
                 </h2>
 
                 {/* Subtitle */}
                 <p className="text-xs text-slate-500 dark:text-slate-400 mb-6 leading-relaxed max-w-[280px]">
-                  Ask me anything about your courses, lessons, code, or certificates on EduPlus.
+                  Ask questions about courses, lessons, concepts, code, or certificates on EduPlus.
                 </p>
 
                 {/* Prompt Suggestions */}

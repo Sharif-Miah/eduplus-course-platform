@@ -18,8 +18,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSession, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
 
-export function MainNav({ items, children }) {
-  const { data: session, status } = useSession();
+export function MainNav({ items, session: serverSession, children }) {
+  const { data: clientSession, status } = useSession();
+  const session = clientSession || serverSession;
 
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [loggedInUser, setLoggedInUser] = useState(null);
@@ -49,7 +50,7 @@ export function MainNav({ items, children }) {
     }
   }, [session]);
 
-  const isAuthenticated = status === "authenticated" && !!session?.user;
+  const isAuthenticated = !!session?.user;
   const isInstructor =
     session?.user?.role?.toLowerCase() === "instructor" ||
     session?.user?.role?.toLowerCase() === "teacher" ||
@@ -65,7 +66,7 @@ export function MainNav({ items, children }) {
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
-      window.location.href = "/";
+      window.location.href = "/api/auth/logout";
     }
   };
 

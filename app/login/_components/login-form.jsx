@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { ceredntialLogin, doSocialLogin } from "@/app/actions";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Mail, Lock, Sparkles, ArrowRight, Loader2, AlertCircle } from "lucide-react";
+import { Mail, Lock, BookOpen, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 import Image from "next/image";
 
 export function LoginForm() {
@@ -69,7 +69,7 @@ export function LoginForm() {
 
           <div className="pt-2">
             <div className="inline-flex items-center gap-1.5 bg-[#4A3AFF]/10 text-[#4A3AFF] px-3 py-0.5 rounded-full text-xs font-bold mb-2">
-              <Sparkles className="w-3 h-3" />
+              <BookOpen className="w-3 h-3" />
               <span>Welcome Back</span>
             </div>
             

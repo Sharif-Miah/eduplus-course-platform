@@ -283,7 +283,7 @@ const Course = async ({ params, searchParams }) => {
               )
             ) : isCourseFullyCompleted ? (
               <span className="inline-flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 text-xs sm:text-sm font-extrabold px-4 py-2.5 rounded-2xl border border-emerald-200 dark:border-emerald-900/60 shadow-xs">
-                <Sparkles className="w-4 h-4 text-emerald-600" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
                 <span>All {totalLessons} Lessons Done! (100%)</span>
               </span>
             ) : (
@@ -305,7 +305,7 @@ const Course = async ({ params, searchParams }) => {
               </div>
               <div className="space-y-1">
                 <span className="inline-flex items-center gap-1 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full">
-                  <Sparkles className="w-3 h-3" />
+                  <CheckCircle2 className="w-3 h-3" />
                   <span>100% Course Completed</span>
                 </span>
                 <h3 className="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white">

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Brain, MessageSquare, Send, Sparkles, RefreshCw, Check, Copy, ChevronRight, ChevronLeft, Bot } from "lucide-react";
+import { HelpCircle, BookOpen, MessageSquare, Send, RefreshCw, Check, Copy, ChevronRight, ChevronLeft } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
@@ -59,98 +59,85 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
   ];
 
   const handleSend = async (customPrompt) => {
-    const textToSend = typeof customPrompt === "string" ? customPrompt : inputValue;
-    if (!textToSend.trim() || isLoading || isStreaming) return;
+    const messageToSend = customPrompt || inputValue.trim();
+    if (!messageToSend || isStreaming) return;
 
-    const userMessage = { role: "user", content: textToSend.trim() };
-    const updatedMessages = [...messages, userMessage];
+    const userMessage = { role: "user", content: messageToSend };
+    const updatedHistory = [...messages, userMessage];
 
-    setMessages([...updatedMessages, { role: "assistant", content: "" }]);
-    setInputValue("");
+    setMessages(updatedHistory);
+    if (!customPrompt) {
+      setInputValue("");
+    }
     setIsLoading(true);
     setIsStreaming(true);
 
-    abortControllerRef.current = new AbortController();
-
     try {
-      const response = await fetch("/api/ai-chat", {
+      const response = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: updatedMessages,
-          context: {
+          messages: updatedHistory,
+          courseContext: {
             courseTitle,
-            currentLesson: currentLessonSlug,
+            lessonTitle,
+            category: course?.category?.title,
+            description: lesson?.description,
           },
         }),
-        signal: abortControllerRef.current.signal,
       });
 
-      if (!response.ok || !response.body) {
-        throw new Error(`Server returned ${response.status}`);
+      if (!response.ok) {
+        throw new Error("Failed to get assistant response");
       }
+
+      setIsLoading(false);
 
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
-      let accumulatedText = "";
-      let firstChunkReceived = false;
+      let assistantText = "";
+
+      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       while (true) {
-        const { value, done } = await reader.read();
+        const { done, value } = await reader.read();
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        accumulatedText += chunk;
-
-        if (!firstChunkReceived) {
-          firstChunkReceived = true;
-          setIsLoading(false);
-        }
+        assistantText += chunk;
 
         setMessages((prev) => {
-          const next = [...prev];
-          const lastIdx = next.length - 1;
-          if (lastIdx >= 0 && next[lastIdx].role === "assistant") {
-            next[lastIdx] = {
-              ...next[lastIdx],
-              content: accumulatedText,
-            };
-          }
-          return next;
+          const newMessages = [...prev];
+          const lastIdx = newMessages.length - 1;
+          newMessages[lastIdx] = {
+            role: "assistant",
+            content: assistantText,
+          };
+          return newMessages;
         });
       }
     } catch (err) {
-      if (err.name === "AbortError") {
-        console.log("Stream aborted by user");
-      } else {
-        console.error("AI chat error:", err);
-        setMessages((prev) => {
-          const next = [...prev];
-          const lastIdx = next.length - 1;
-          if (lastIdx >= 0 && next[lastIdx].role === "assistant") {
-            next[lastIdx] = {
-              ...next[lastIdx],
-              content:
-                next[lastIdx].content ||
-                "Sorry, I encountered an issue generating an answer. Please check your Gemini API key in `.env` and try again.",
-            };
-          }
-          return next;
-        });
-      }
-    } finally {
+      console.error("Assistant chat error:", err);
       setIsLoading(false);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content:
+            "I apologize, but I encountered an error answering your question. Please make sure your network is connected and try again.",
+        },
+      ]);
+    } finally {
       setIsStreaming(false);
+      setIsLoading(false);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     }
   };
 
   const handleClear = () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
     setMessages([]);
-    setIsLoading(false);
-    setIsStreaming(false);
   };
 
   const handleCopy = (text, idx) => {
@@ -165,13 +152,13 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
       <div className="hidden xl:flex flex-col items-center justify-start py-4 w-11 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0d121f] text-slate-500 dark:text-slate-400 sticky top-[133px] h-[calc(100vh-170px)] min-h-[620px] max-h-[820px] rounded-r-3xl flex-shrink-0 transition-colors duration-200">
         <button
           onClick={() => setIsCollapsed(false)}
-          title="Expand AI Assistant Panel"
+          title="Expand Study Assistant Panel"
           className="p-2 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 rounded-xl transition flex flex-col items-center gap-4"
         >
           <ChevronLeft className="w-4 h-4 text-[#4A3AFF] dark:text-indigo-400" />
           <div className="[writing-mode:vertical-lr] text-xs font-bold tracking-widest uppercase text-slate-600 dark:text-slate-300 flex items-center gap-2">
-            <span>ASK AI</span>
-            <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
+            <span>STUDY GUIDE</span>
+            <HelpCircle className="w-3.5 h-3.5 text-[#4A3AFF] dark:text-indigo-400" />
           </div>
         </button>
       </div>
@@ -185,27 +172,26 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
         className
       )}
     >
-      {/* 1. Header (Matching Reference Image 2: ASK AI + ACTIVE badge) */}
+      {/* 1. Header (Clean Study Assistant + ACTIVE badge) */}
       <div className="flex items-center justify-between px-4 py-3.5 bg-slate-50/80 dark:bg-[#0d1322] border-b border-slate-200/80 dark:border-slate-800/90 transition-colors duration-200">
         <div className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-gradient-to-tr from-[#4A3AFF] to-[#6366f1] text-white shadow-xs">
-            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+          <div className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#4A3AFF] text-white shadow-xs">
+            <BookOpen className="w-4 h-4 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-1.5 leading-none">
               <span className="text-xs font-black tracking-wider text-slate-900 dark:text-white uppercase">
-                ASK AI
+                STUDY ASSISTANT
               </span>
-              <Sparkles className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
             </div>
             <span className="text-[9px] font-semibold text-slate-500 dark:text-slate-400 tracking-widest uppercase">
-              EDUPLUS AI TUTOR
+              COURSE MENTOR & NOTES
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-1">
-          {/* Active status indicator badge (as in Image 3) */}
+          {/* Active status indicator badge */}
           <span className="inline-flex items-center gap-1 text-[9.5px] uppercase font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/25 dark:border-emerald-500/30">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
             <span>ACTIVE</span>
@@ -224,7 +210,7 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
           {/* Collapse button */}
           <button
             onClick={() => setIsCollapsed(true)}
-            title="Collapse AI Panel"
+            title="Collapse Assistant Panel"
             className="p-1 text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-200/60 dark:hover:bg-slate-800/60 rounded-md transition"
           >
             <ChevronRight className="w-4 h-4" />
@@ -232,25 +218,25 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
         </div>
       </div>
 
-      {/* 2. Messages & Knowledge Synthesis View */}
+      {/* 2. Messages & Study Notes View */}
       <div className="flex-1 overflow-y-auto p-3 space-y-3 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-800 bg-white dark:bg-[#0c101d] transition-colors duration-200">
         {messages.length === 0 ? (
-          /* Initial State matching 3rd image (Knowledge Synthesis) */
+          /* Initial State */
           <div className="flex flex-col items-center justify-center h-full text-center px-2 py-4">
-            {/* Center Speech Bubble Icon inside subtle circle */}
+            {/* Center Help/Message Icon */}
             <div className="w-13 h-13 rounded-full bg-indigo-50/80 dark:bg-[#131b2e] border border-indigo-200 dark:border-indigo-500/30 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(74,58,255,0.15)]">
               <MessageSquare className="w-6 h-6 text-[#4A3AFF] dark:text-indigo-400" />
             </div>
 
             <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1.5 tracking-tight">
-              Knowledge Synthesis
+              Course Q&A & Notes
             </h3>
 
             <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-5 leading-relaxed max-w-[240px]">
-              Ask questions to clarify concepts, synthesize summaries, or explore lesson code.
+              Ask questions to clarify concepts, get detailed lesson notes, or review code snippets.
             </p>
 
-            {/* Quick Action Chips (as in 3rd image) */}
+            {/* Quick Action Chips */}
             <div className="w-full space-y-1.5">
               {quickPills.map((pill, idx) => (
                 <button
@@ -361,7 +347,7 @@ export function LessonAiSidebar({ courseTitle = "Course", className = "" }) {
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask AI Tutor about this lesson..."
+            placeholder="Ask a question about this lesson..."
             disabled={isStreaming}
             className="flex-1 bg-transparent text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none disabled:opacity-50"
           />
