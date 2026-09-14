@@ -27,22 +27,22 @@ const CourseLayout = async ({ children, params }) => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0b1120] flex flex-col transition-colors duration-200">
       {/* Top Sticky Learning Sub-Header */}
-      <div className="bg-slate-950 text-white border-b border-slate-800/80 sticky top-20 z-30 px-3 sm:px-5 py-3 shadow-xs">
+      <div className="bg-white/95 dark:bg-slate-950/95 backdrop-blur-md text-slate-800 dark:text-white border-b border-slate-200/80 dark:border-slate-800/80 sticky top-20 z-30 px-3 sm:px-5 py-3 shadow-xs transition-colors duration-200">
         <div className="max-w-[1720px] mx-auto flex items-center justify-between gap-4">
           
           {/* Left: Back Link & Breadcrumbs */}
           <div className="flex items-center gap-3 overflow-hidden">
             <Link
               href={`/courses/${id}`}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white bg-slate-800/90 hover:bg-slate-700/90 px-3 py-1.5 rounded-full border border-slate-700/70 transition flex-shrink-0"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800/90 dark:hover:bg-slate-700/90 px-3 py-1.5 rounded-full border border-slate-200/80 dark:border-slate-700/70 transition flex-shrink-0"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Course Overview</span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-2 text-xs font-medium text-slate-400 truncate">
-              <ChevronRight className="w-3.5 h-3.5 text-slate-600 flex-shrink-0" />
-              <span className="text-white font-bold truncate max-w-sm">
+            <div className="hidden md:flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 truncate">
+              <ChevronRight className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600 flex-shrink-0" />
+              <span className="text-slate-900 dark:text-white font-bold truncate max-w-sm">
                 {course?.title || "Learning Classroom"}
               </span>
             </div>

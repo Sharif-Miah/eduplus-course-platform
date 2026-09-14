@@ -118,7 +118,7 @@ const Course = async ({ params, searchParams }) => {
     <div className="space-y-4 w-full mx-auto">
       
       {/* 1. CINEMA VIDEO PLAYER CARD (Matching Reference Image 2) */}
-      <div className="bg-[#0c101d] rounded-3xl overflow-hidden shadow-2xl border border-slate-200/80 dark:border-slate-800/90 relative p-3 sm:p-4 space-y-3.5 transition-colors">
+      <div className="bg-white dark:bg-[#0c101d] rounded-3xl overflow-hidden shadow-lg dark:shadow-2xl border border-slate-200/80 dark:border-slate-800/90 relative p-3 sm:p-4 space-y-3.5 transition-colors duration-200">
         
         {/* The Video Layer (Balanced cinema scale) */}
         <div className="bg-slate-950 rounded-2xl overflow-hidden shadow-inner">
@@ -129,11 +129,11 @@ const Course = async ({ params, searchParams }) => {
         <div className="px-2 pt-1 pb-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 dark:text-amber-400 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 dark:bg-amber-400 animate-pulse" />
                 <span>NOW STREAMING</span>
               </span>
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider bg-slate-800/80 px-2 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold text-slate-600 dark:text-slate-400 uppercase tracking-wider bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full">
                 {currentModuleObj?.title || "Module"}
               </span>
             </div>
@@ -147,7 +147,7 @@ const Course = async ({ params, searchParams }) => {
             {prevLesson ? (
               <Link
                 href={`/courses/${id}/lesson?name=${prevLesson.slug}&module=${prevLesson.moduleSlug}`}
-                className="inline-flex items-center gap-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3 py-1.5 rounded-xl transition"
+                className="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold px-3 py-1.5 rounded-xl transition"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
                 <span>Prev</span>
@@ -155,7 +155,7 @@ const Course = async ({ params, searchParams }) => {
             ) : (
               <button
                 disabled
-                className="inline-flex items-center gap-1 bg-slate-800/40 text-slate-600 text-xs font-bold px-3 py-1.5 rounded-xl opacity-50 cursor-not-allowed"
+                className="inline-flex items-center gap-1 bg-slate-100 dark:bg-slate-800/40 text-slate-400 dark:text-slate-600 text-xs font-bold px-3 py-1.5 rounded-xl opacity-50 cursor-not-allowed"
               >
                 <ChevronLeft className="w-3.5 h-3.5" />
                 <span>Prev</span>
@@ -174,7 +174,7 @@ const Course = async ({ params, searchParams }) => {
               ) : (
                 <button
                   disabled
-                  className="inline-flex items-center gap-1 bg-slate-800/60 text-slate-500 text-xs font-bold px-3 py-1.5 rounded-xl opacity-60 cursor-not-allowed border border-slate-700/60"
+                  className="inline-flex items-center gap-1 bg-slate-100 dark:bg-slate-800/60 text-slate-400 dark:text-slate-500 text-xs font-bold px-3 py-1.5 rounded-xl opacity-60 cursor-not-allowed border border-slate-200 dark:border-slate-700/60"
                   title="Complete current video to unlock"
                 >
                   <Lock className="w-3 h-3" />
@@ -186,17 +186,17 @@ const Course = async ({ params, searchParams }) => {
         </div>
 
         {/* Full-width Module Completion Progress Bar (Matching Reference Image 2) */}
-        <div className="rounded-2xl bg-[#080c16] border border-slate-800/80 px-3.5 py-2.5 space-y-1.5">
+        <div className="rounded-2xl bg-slate-50 dark:bg-[#080c16] border border-slate-200/80 dark:border-slate-800/80 px-3.5 py-2.5 space-y-1.5 transition-colors duration-200">
           <div className="flex items-center justify-between text-xs font-bold">
-            <span className="text-slate-400 tracking-wider uppercase text-[10px] font-extrabold flex items-center gap-1.5">
-              <Layers className="w-3 h-3 text-indigo-400" />
+            <span className="text-slate-600 dark:text-slate-400 tracking-wider uppercase text-[10px] font-extrabold flex items-center gap-1.5">
+              <Layers className="w-3 h-3 text-[#4A3AFF] dark:text-indigo-400" />
               <span>{totalCompletedLessons} OF {totalLessons} LESSONS COMPLETED</span>
             </span>
-            <span className={isCourseFullyCompleted ? "text-emerald-400 font-black text-xs" : "text-indigo-400 font-black text-xs"}>
+            <span className={isCourseFullyCompleted ? "text-emerald-600 dark:text-emerald-400 font-black text-xs" : "text-[#4A3AFF] dark:text-indigo-400 font-black text-xs"}>
               {Math.round((totalCompletedLessons / Math.max(1, totalLessons)) * 100)}%
             </span>
           </div>
-          <div className="w-full bg-slate-800/80 h-1.5 rounded-full overflow-hidden">
+          <div className="w-full bg-slate-200 dark:bg-slate-800/80 h-1.5 rounded-full overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-500 ${
                 isCourseFullyCompleted ? "bg-[#14C88C]" : "bg-gradient-to-r from-[#4A3AFF] to-indigo-400"
@@ -209,7 +209,7 @@ const Course = async ({ params, searchParams }) => {
       </div>
 
       {/* 2. LESSON OVERVIEW & TABS */}
-      <div className="bg-[#0c101d] rounded-3xl p-5 sm:p-6 shadow-xl border border-slate-200/80 dark:border-slate-800/90 space-y-4 transition-colors">
+      <div className="bg-white dark:bg-[#0c101d] rounded-3xl p-5 sm:p-6 shadow-lg dark:shadow-xl border border-slate-200/80 dark:border-slate-800/90 space-y-4 transition-colors duration-200">
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
           <div className="space-y-2">

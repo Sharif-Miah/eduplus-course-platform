@@ -85,7 +85,7 @@ export default function SiteFooter({ className }) {
               <li><Link href="/#instructors" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Instructor</Link></li>
               <li><Link href="/events" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Events</Link></li>
               <li><Link href="/#instructors" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Instructor Details</Link></li>
-              <li><Link href="/pricing" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Purchase Guide</Link></li>
+              <li><Link href="/courses" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Course Catalog</Link></li>
             </ul>
           </div>
 
@@ -101,9 +101,9 @@ export default function SiteFooter({ className }) {
             </div>
             <ul className="space-y-2.5 text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 font-medium">
               <li><Link href="/contact" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link href="/courses" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Technology</Link></li>
+              <li><Link href="/courses" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">All Courses</Link></li>
               <li><Link href="/#instructors" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Instructors</Link></li>
-              <li><Link href="/pricing" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link href="/blog" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Blog & Articles</Link></li>
               <li><Link href="/services" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Service</Link></li>
               <li><Link href="/privacy" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Privacy Policy</Link></li>
             </ul>
@@ -120,12 +120,12 @@ export default function SiteFooter({ className }) {
               </div>
             </div>
             <ul className="space-y-2.5 text-xs sm:text-[13px] text-slate-600 dark:text-slate-300 font-medium">
-              <li><Link href="/contact" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link href="/courses" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Technology</Link></li>
-              <li><Link href="/#instructors" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Instructors</Link></li>
-              <li><Link href="/pricing" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link href="/contact" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Support Desk</Link></li>
+              <li><Link href="/courses" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Top Categories</Link></li>
+              <li><Link href="/#instructors" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Mentors</Link></li>
+              <li><Link href="/docs" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Documentation</Link></li>
               <li><Link href="/services" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Service</Link></li>
-              <li><Link href="/privacy" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/privacy" className="hover:text-[#4A3AFF] dark:hover:text-white transition-colors">Terms of Use</Link></li>
             </ul>
           </div>
 

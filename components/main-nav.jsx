@@ -104,13 +104,6 @@ export function MainNav({ items, children }) {
           </DropdownMenu>
 
           <Link
-            href="/pricing"
-            className="text-sm font-medium text-gray-700 dark:text-slate-300 hover:text-[#4A3AFF] dark:hover:text-[#4A3AFF] transition-colors"
-          >
-            Pricing
-          </Link>
-
-          <Link
             href="/blog"
             className="text-sm font-medium text-gray-700 dark:text-slate-300 hover:text-[#4A3AFF] dark:hover:text-[#4A3AFF] transition-colors"
           >

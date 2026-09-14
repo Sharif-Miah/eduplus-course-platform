@@ -580,10 +580,10 @@ export default function DocsPage() {
                   Read Blog
                 </Link>
                 <Link
-                  href="/pricing"
-                  className={cn(buttonVariants({ size: "sm" }), "bg-sky-600 hover:bg-sky-700 text-white")}
+                  href="/courses"
+                  className={cn(buttonVariants({ size: "sm" }), "bg-[#4A3AFF] hover:bg-[#3D2FE6] text-white")}
                 >
-                  View Pricing
+                  Browse Courses
                 </Link>
               </div>
             </div>
