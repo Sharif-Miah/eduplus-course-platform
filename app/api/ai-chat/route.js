@@ -61,10 +61,10 @@ Your mission is to:
 4. If asked who you are, introduce yourself as the EduPlus AI Assistant.`;
 
     const candidateModels = [
-      "gemini-3.6-flash",
-      "gemini-3.5-flash",
-      "gemini-flash-latest",
       "gemini-2.0-flash",
+      "gemini-2.0-flash-lite",
+      "gemini-1.5-flash",
+      "gemini-1.5-flash-8b",
     ];
 
     let geminiStreamResponse = null;
