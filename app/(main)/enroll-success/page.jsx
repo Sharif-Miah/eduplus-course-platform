@@ -14,13 +14,14 @@ import { enrollForCourse } from "@/queries/enrollments";
 
 export const dynamic = "force-dynamic";
 
-const Success = async ({ searchParams: { session_id, courseId } }) => {
-    console.log(session_id, courseId);
+const Success = async ({ searchParams }) => {
+    const { session_id, courseId, tran_id, method } = searchParams || {};
 
-    if (!session_id)
+    if (!session_id && !tran_id) {
         throw new Error(
-            "Please provide a valid session id that starts with cs_"
+            "Please provide a valid session_id or tran_id."
         );
+    }
 
     const userSession = await auth();
 
@@ -31,42 +32,48 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
     const course = await getCourseDetails(courseId);
     const loggedInUser = await getUserByEmail(userSession?.user?.email);
 
-    const checkoutSession = await stripe.checkout.sessions.retrieve(
-        session_id,
-        {
-            expand: ["line_items", "payment_intent"],
+    let paymentStatus = "pending";
+    let isSslCommerz = method === "sslcommerz" || !!tran_id;
+
+    if (isSslCommerz) {
+        paymentStatus = "succeeded";
+        // Ensure enrollment is present in DB for safety
+        if (course?.id && loggedInUser?.id) {
+            try {
+                await enrollForCourse(course.id, loggedInUser.id, "sslcommerz");
+            } catch (e) {
+                // Ignore if already enrolled
+            }
         }
-    );
+    } else if (session_id) {
+        const checkoutSession = await stripe.checkout.sessions.retrieve(
+            session_id,
+            {
+                expand: ["line_items", "payment_intent"],
+            }
+        );
 
-    //console.log(checkoutSession);
+        const paymentIntent = checkoutSession?.payment_intent;
+        paymentStatus = paymentIntent?.status;
 
-    const paymentIntent = checkoutSession?.payment_intent;
-    const paymentStatus = paymentIntent?.status;
-
-    console.log(paymentStatus);
-
-    // Cutomer info
-    const customerName = `${loggedInUser?.firstName} ${loggedInUser?.lastName}`;
-    const customerEmail = loggedInUser?.email;
-    const productName = course?.title;
-    console.log(productName, customerName, customerEmail);
+        if (paymentStatus === "succeeded") {
+            // Update DB(Enrollment collection)
+            const enrolled = await enrollForCourse(
+              course?.id,
+              loggedInUser?.id,
+              "stripe"
+            );
+        }
+    }
 
     if (paymentStatus === "succeeded") {
-        // Update DB(Enrollment collection)
-        console.log(course?.id, loggedInUser?.id);
-        const enrolled = await enrollForCourse(
-          course?.id,
-          loggedInUser?.id,
-          "stripe"
-        );
-        console.log(enrolled);
+        const customerName = `${loggedInUser?.firstName} ${loggedInUser?.lastName}`;
+        const customerEmail = loggedInUser?.email;
+        const productName = course?.title;
 
-        // Send Emails to the instructor, student,and the person
-        // who paid
-
+        // Send Emails to the instructor and student
         const instructorName = `${course?.instructor?.firstName} ${course?.instructor?.lastName}`;
         const instructorEmail = course?.instructor?.email;
-
 
         const emailsToSend = [
           {
@@ -81,9 +88,15 @@ const Success = async ({ searchParams: { session_id, courseId } }) => {
           }
         ];
 
-        const emailSentResponse = await sendEmails(emailsToSend);
-        console.log(emailSentResponse);
+        try {
+            await sendEmails(emailsToSend);
+        } catch (e) {
+            console.warn("Email send failed:", e?.message);
+        }
     }
+
+    const customerName = `${loggedInUser?.firstName || ""} ${loggedInUser?.lastName || ""}`.trim() || "Student";
+    const productName = course?.title || "Course";
 
     return (
         <div className="h-full w-full flex-1 flex flex-col items-center justify-center py-20">

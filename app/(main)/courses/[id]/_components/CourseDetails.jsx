@@ -209,7 +209,11 @@ const CourseDetails = async ({ course }) => {
                   </Link>
                 ) : (
                   <div className="w-full">
-                    <EnrollCourse courseId={course?.id} />
+                    <EnrollCourse 
+                      courseId={course?.id} 
+                      coursePrice={rawPrice} 
+                      courseTitle={course?.title} 
+                    />
                   </div>
                 )}
 
