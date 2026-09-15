@@ -1,5 +1,6 @@
 import { PDFDocument, StandardFonts, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
+import QRCode from "qrcode";
 
 import { getCourseDetails } from "@/queries/courses";
 import { getLoggedInUser } from "@/lib/loggedin-user";
@@ -15,17 +16,79 @@ export async function GET(request) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const courseId = searchParams.get("courseId");
-    const course = await getCourseDetails(courseId);
-    const loggedInUser = await getLoggedInUser();
+    const studentIdParam = searchParams.get("studentId");
+    const credentialIdParam = searchParams.get("credentialId");
 
-    const report = await getAReport({ course: courseId, student: loggedInUser?.id });
+    const course = await getCourseDetails(courseId);
+
+    // Resolve target user: if studentIdParam provided (e.g. from verification portal), use it; else use logged-in user
+    let targetUser = null;
+    if (studentIdParam) {
+      try {
+        const { User } = await import("@/model/user-model");
+        targetUser = await User.findById(studentIdParam).lean();
+      } catch (e) {
+        console.warn("Could not find student by ID:", studentIdParam);
+      }
+    }
+
+    if (!targetUser) {
+      targetUser = await getLoggedInUser();
+    }
+
+    const report = await getAReport({
+      course: courseId,
+      student: targetUser?._id || targetUser?.id,
+    });
+
     const completionDate = report?.completion_date
       ? formatMyDate(report?.completion_date)
       : formatMyDate(Date.now());
 
-    const studentName = `${loggedInUser?.firstName || ""} ${loggedInUser?.lastName || ""}`.trim() || "Student";
+    const studentName =
+      `${targetUser?.firstName || ""} ${targetUser?.lastName || ""}`.trim() ||
+      "Student";
     const courseTitle = course?.title || "Course Completion";
-    const credentialId = `EDU-${(courseId || "CERT").slice(-5).toUpperCase()}-${(loggedInUser?.id ? loggedInUser.id.toString().slice(-4) : "8492").toUpperCase()}`;
+
+    // Stable, elegant Credential ID
+    const credentialId =
+      credentialIdParam ||
+      report?.credentialId ||
+      `EDU-${(courseId || "CERT").slice(-6).toUpperCase()}-${(targetUser?.id ? targetUser.id.toString().slice(-6) : targetUser?._id ? targetUser._id.toString().slice(-6) : "849201").toUpperCase()}`;
+
+    // Ensure credentialId is persisted on report
+    if (report && !report.credentialId && (targetUser?.id || targetUser?._id)) {
+      try {
+        const { Report } = await import("@/model/report-model");
+        await Report.findByIdAndUpdate(report.id || report._id, { credentialId });
+      } catch (e) {
+        console.warn("Could not save credentialId:", e.message);
+      }
+    }
+
+    // Build public verification URL for QR Code
+    // Prioritizes live Vercel / Production domain so smartphone cameras can scan and open globally from anywhere
+    const liveBase =
+      process.env.NEXT_PUBLIC_LIVE_URL ||
+      process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
+      (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes("localhost")
+        ? process.env.NEXT_PUBLIC_APP_URL
+        : "https://educonnect-peach-phi.vercel.app");
+
+    const liveDomainClean = liveBase.replace(/^https?:\/\//, "").replace(/\/$/, "");
+    const verificationUrl = `https://${liveDomainClean}/verify-cert/${credentialId}`;
+
+    // Generate crisp QR Code PNG buffer for the verification URL
+    const qrPngBytes = await QRCode.toBuffer(verificationUrl, {
+      type: "png",
+      width: 260,
+      margin: 1,
+      color: {
+        dark: "#0F172A", // Rich dark slate
+        light: "#FFFFFF",
+      },
+    });
 
     // Read fonts directly from public/fonts
     const publicDir = path.join(process.cwd(), "public");
@@ -268,6 +331,51 @@ export async function GET(request) {
       console.log("Seal image skipped:", err);
     }
 
+    // 7.5 Center: Official Dynamic Verification QR Code
+    try {
+      const qrImg = await pdfDoc.embedPng(qrPngBytes);
+      const qrSize = 64;
+      const qrX = width / 2 - qrSize / 2;
+      const qrY = 56;
+
+      // Card frame for high contrast scanning
+      page.drawRectangle({
+        x: qrX - 4,
+        y: qrY - 4,
+        width: qrSize + 8,
+        height: qrSize + 8,
+        color: rgb(1, 1, 1),
+        borderColor: rgb(0.85, 0.88, 0.94),
+        borderWidth: 1,
+      });
+
+      page.drawImage(qrImg, {
+        x: qrX,
+        y: qrY,
+        width: qrSize,
+        height: qrSize,
+      });
+
+      const qrLabel = "SCAN TO VERIFY";
+      const qrSub = `${liveDomainClean}/verify-cert`;
+      page.drawText(qrLabel, {
+        x: qrX + qrSize / 2 - montserratBold.widthOfTextAtSize(qrLabel, 6.5) / 2,
+        y: qrY - 12,
+        size: 6.5,
+        font: montserratBold,
+        color: rgb(0.29, 0.23, 1.0),
+      });
+      page.drawText(qrSub, {
+        x: qrX + qrSize / 2 - montserratMedium.widthOfTextAtSize(qrSub, 6) / 2,
+        y: qrY - 21,
+        size: 6,
+        font: montserratMedium,
+        color: rgb(0.45, 0.5, 0.6),
+      });
+    } catch (qrErr) {
+      console.warn("QR code embed skipped:", qrErr);
+    }
+
     // 8. Right Side: Sharif Miah Signature in fluid handwritten calligraphy
     const sigX = width - 260;
     const sigY = 95;
@@ -320,7 +428,7 @@ export async function GET(request) {
     return new Response(pdfBytes, {
       headers: {
         "content-type": "application/pdf",
-        "content-disposition": `attachment; filename="EduPlus-Certificate-${courseId || "course"}.pdf"`,
+        "content-disposition": `attachment; filename="EduPlus-Certificate-${credentialId}.pdf"`,
       },
     });
   } catch (error) {

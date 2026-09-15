@@ -20,6 +20,11 @@ const reportSchema = new Schema({
   completion_date: {
     required: false,
     type: Date
+  },
+
+  credentialId: {
+    required: false,
+    type: String
   }
 });
 

@@ -20,7 +20,8 @@ import {
   HelpCircle,
   Clock,
   Lock,
-  Award
+  Award,
+  ExternalLink
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -317,8 +318,16 @@ const Course = async ({ params, searchParams }) => {
               </div>
             </div>
 
-            <div className="w-full md:w-auto flex-shrink-0 min-w-[240px]">
+            <div className="w-full md:w-auto flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
               <DownloadCertificate courseId={id} totalProgress={100} />
+              <Link
+                href={`/verify-cert/EDU-${id.slice(-6).toUpperCase()}-${loggedinUser?.id ? loggedinUser.id.toString().slice(-6).toUpperCase() : "849201"}`}
+                target="_blank"
+                className="inline-flex items-center justify-center gap-1.5 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-bold py-2.5 px-4 rounded-2xl shadow-sm transition-all hover:scale-105 cursor-pointer whitespace-nowrap"
+              >
+                <span>Verify & LinkedIn</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
             </div>
           </div>
         ) : (

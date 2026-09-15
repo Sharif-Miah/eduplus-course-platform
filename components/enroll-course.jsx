@@ -15,10 +15,7 @@ import {
   CreditCard, 
   Smartphone, 
   ShieldCheck, 
-  CheckCircle2, 
-  Lock,
-  Sparkles,
-  ExternalLink
+  Lock 
 } from "lucide-react";
 import { createCheckoutSession } from "@/app/actions/stripe";
 import { createSSLCommerzSession } from "@/app/actions/sslcommerz";
@@ -27,17 +24,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-export const EnrollCourse = ({ asLink, courseId, coursePrice = 99, courseTitle = "Course" }) => {
+export function EnrollCourse({ asLink, courseId, coursePrice = 99, courseTitle = "Course" }) {
   const { data: session } = useSession();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedMethod, setSelectedMethod] = useState("sslcommerz"); // Default to SSLCommerz local payment
+  const [selectedMethod, setSelectedMethod] = useState("sslcommerz"); // Default to local payment
   const [loading, setLoading] = useState(false);
 
-  // Price calculations
+  // Price formatting
   const priceNum = typeof coursePrice === "number" ? coursePrice : parseFloat(coursePrice) || 99;
   const priceUsd = priceNum.toFixed(2);
-  const priceBdt = (priceNum * 120).toLocaleString("en-BD");
+  const priceBdt = Math.round(priceNum * 120).toLocaleString("en-BD");
 
   const handleOpenModal = () => {
     if (!session?.user) {
@@ -80,7 +77,7 @@ export const EnrollCourse = ({ asLink, courseId, coursePrice = 99, courseTitle =
         }
       }
     } catch (err) {
-      console.error(err);
+      console.error("Payment initiation error:", err);
       toast.error(err.message || "Payment initiation failed.");
       setLoading(false);
     }
@@ -123,7 +120,7 @@ export const EnrollCourse = ({ asLink, courseId, coursePrice = 99, courseTitle =
               Select Payment Method
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-500 dark:text-slate-400">
-              Choose your preferred payment gateway to unlock lifetime access.
+              Choose your preferred payment gateway to unlock lifetime access to {courseTitle}.
             </DialogDescription>
           </DialogHeader>
 
@@ -155,7 +152,7 @@ export const EnrollCourse = ({ asLink, courseId, coursePrice = 99, courseTitle =
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Via SSLCommerz (bKash, Nagad, Rocket, Upay, Local Cards)
+                      SSLCommerz (bKash, Nagad, Rocket, Upay, Cards)
                     </p>
                   </div>
                 </div>
@@ -180,7 +177,7 @@ export const EnrollCourse = ({ asLink, courseId, coursePrice = 99, courseTitle =
                   Rocket
                 </span>
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
-                  DBBL / Cards
+                  Local Cards
                 </span>
               </div>
             </div>
@@ -210,7 +207,7 @@ export const EnrollCourse = ({ asLink, courseId, coursePrice = 99, courseTitle =
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400">
-                      Visa, MasterCard, American Express, Apple Pay
+                      Visa, MasterCard, American Express
                     </p>
                   </div>
                 </div>
@@ -272,4 +269,6 @@ export const EnrollCourse = ({ asLink, courseId, coursePrice = 99, courseTitle =
       </Dialog>
     </>
   );
-};
+}
+
+export default EnrollCourse;
